@@ -1,0 +1,9 @@
+data/
+*.pt
+__pycache__/
+.ipynb_checkpoints/
+results/cache/
+results/test_gate_done.flag
+.venv/
+venv/
+.DS_Store
