@@ -1,0 +1,61 @@
+{
+  "duplicates_train60k_vs_test": {
+    "n_within_a": 0,
+    "n_within_b": 0,
+    "n_overlap": 0,
+    "overlap_indices_a": [],
+    "examples_within_a": [],
+    "examples_within_b": []
+  },
+  "n_overlap_train60k_vs_test_total": 0,
+  "duplicates_train54k_vs_val": {
+    "n_within_a": 0,
+    "n_within_b": 0,
+    "n_overlap": 0,
+    "overlap_indices_a": [],
+    "examples_within_a": [],
+    "examples_within_b": []
+  },
+  "n_overlap_train54k_vs_val_total": 0,
+  "closest_centroid_pairs": [
+    [
+      "Pullover",
+      "Coat",
+      2.4728891930876795
+    ],
+    [
+      "Pullover",
+      "Shirt",
+      2.6769262601862667
+    ],
+    [
+      "Coat",
+      "Shirt",
+      2.9898114432332736
+    ],
+    [
+      "T-shirt/top",
+      "Shirt",
+      3.685264264038449
+    ],
+    [
+      "Sandal",
+      "Sneaker",
+      3.8225165098945824
+    ]
+  ],
+  "pca_cum_variance_10": 0.7197794914245605,
+  "pca_cum_variance_50": 0.8625301718711853,
+  "sanity_baselines": [
+    {
+      "name": "majority_class",
+      "val_accuracy": 0.1,
+      "val_macro_f1": 0.01818181818181818
+    },
+    {
+      "name": "nearest_class_mean",
+      "val_accuracy": 0.692,
+      "val_macro_f1": 0.688238239839905
+    }
+  ]
+}

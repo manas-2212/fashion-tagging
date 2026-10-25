@@ -63,3 +63,49 @@ def test_stratified_subset(real):
     print("subset per class:", counts.tolist())
     assert len(ys) == 10000 and (np.abs(counts - 1000) <= 1).all()
     assert np.array_equal(idx, stratified_subset(X, ytr, 10000)[2])
+
+
+# ======================= Second PR tests =======================
+from src.config import CLASS_NAMES
+from src.data import class_centroid_distances, find_duplicates, pca_projection, sanity_baselines
+
+
+def test_find_duplicates_mock():
+    rng = np.random.default_rng(1)
+    A = rng.integers(0, 256, (100, 28, 28), dtype=np.uint8)
+    A[10] = A[3]; A[50] = A[3]            # 2 injected copies inside A
+    B = rng.integers(0, 256, (50, 28, 28), dtype=np.uint8)
+    B[7] = A[20]                          # A[20] also appears in B
+    B[9] = B[8]                           # 1 copy inside B
+    A_copy = A.copy()
+    r = find_duplicates(A, B)
+    assert r["n_within_a"] == 2 and r["n_within_b"] == 1
+    assert r["n_overlap"] == 1 and r["overlap_indices_a"] == [20]
+    r0 = find_duplicates(A)               # X_b=None must work
+    assert r0["n_within_a"] == 2 and r0["n_within_b"] == 0 and r0["n_overlap"] == 0
+    assert np.array_equal(A, A_copy)      # input not modified
+
+
+def test_pca_projection_mock(mock):
+    X, _ = mock
+    Z, evr = pca_projection(X, n_components=5)   # train-only array passed in
+    assert Z.shape == (len(X), 5) and Z.dtype == np.float32 and evr.shape == (5,)
+    assert 0 < evr.sum() <= 1 + 1e-6
+
+
+def test_centroids_mock(mock):
+    X, y = mock
+    D = class_centroid_distances(X, y)
+    assert list(D.columns) == CLASS_NAMES and list(D.index) == CLASS_NAMES
+    assert np.allclose(D.values, D.values.T) and np.allclose(np.diag(D.values), 0)
+
+
+def test_sanity_baselines_mock(mock):
+    X, y = mock
+    s = prepare_splits(X, y)              # 6000 mock images -> 600 val, 60 per class
+    df = sanity_baselines(s["X_train"], s["y_train"], s["X_val"], s["y_val"])
+    print(df)
+    assert list(df.columns) == ["name", "val_accuracy", "val_macro_f1"] and len(df) == 2
+    assert ((df.val_accuracy >= 0) & (df.val_accuracy <= 1)).all()
+    maj = df.loc[df.name == "majority_class", "val_accuracy"].iloc[0]
+    assert abs(maj - 0.1) < 1e-9          # balanced val -> majority accuracy = 1/10
