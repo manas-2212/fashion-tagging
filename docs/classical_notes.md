@@ -84,3 +84,21 @@ Hyperparameters were tuned on a stratified 10{,}000-image subset (see limitation
 6. **Why not GridSearchCV with cross-validation?** We have an official fixed validation split and a runtime budget; CV would multiply fit cost, especially for SVM and k-NN.
 7. **Why not probability=True for the SVM?** It runs an internal cross-validation that multiplies training cost, so SVM confidence is NaN downstream.
 8. **Why is the logistic regression parameter count 7,850 for pixels?** 10 classes x 784 weights + 10 intercepts = 7,850; for HOG, 10 x 1,296 + 10 = 12,970.
+
+---
+## Runtime plan (probe estimates, 5,000-image stratified probe, first grid value per model)
+Source: results/runtime_probe_tanish.txt. Estimates only; actual fit times TBD. Limit = MAX_FIT_MINUTES*60 = 1800 s.
+Machine details: TBD (fill in own chip/RAM).
+
+| Model | Representation | Estimated fit (s) | kNN predict val / test (s) | Decision |
+|---|---|---|---|---|
+| logreg | pixels | 6.4 | n/a | full 54,000 |
+| knn | pixels | 0.0 | 6.1 / 10.2 | full 54,000 |
+| rf | pixels | 7.4 | n/a | full 54,000 |
+| svm | pixels | 149.8 | n/a | full 54,000 |
+| logreg | hog | 5.1 | n/a | full 54,000 |
+| knn | hog | 0.0 | 5.0 / 8.3 | full 54,000 |
+| rf | hog | 10.7 | n/a | full 54,000 |
+| svm | hog | 218.5 | n/a | full 54,000 |
+
+Caveats: SVM estimates assume quadratic scaling (probably optimistic). Other grid values (SVM C=10, k=11, RF min_samples_leaf=3) were not probed. kNN predict times are extrapolated from a probe. Compare every estimate with the real fit time after the real runs.
