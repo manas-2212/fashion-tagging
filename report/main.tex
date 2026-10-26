@@ -1,0 +1,193 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{cite}
+
+% Every measured value is a placeholder until it is filled from results/*.csv and results/*.json.
+\newcommand{\TBD}{\textbf{TBD}}
+% Stand-in for a figure that a teammate has not delivered yet (replace with \includegraphics).
+\newcommand{\figplaceholder}[1]{\fbox{\parbox[c][2.2cm][c]{0.85\columnwidth}{\centering #1}}}
+
+\begin{document}
+
+\title{Inventory Image Tagging via Handcrafted Features\\and a Small CNN}
+
+% Names as provided so far (first names only). Full names, affiliations and emails: TBD, fill in.
+\author{\IEEEauthorblockN{Manas \and Akhil \and Anant \and Tanish \and Rohan \and Puneet}
+\IEEEauthorblockA{Affiliation: \TBD \\ Email: \TBD}}
+
+\maketitle
+
+\begin{abstract}
+\TBD{} (written last, only from measured results in the results files.)
+\end{abstract}
+
+\begin{IEEEkeywords}
+Fashion-MNIST, image classification, HOG, convolutional neural network, support vector machine, benchmarking
+\end{IEEEkeywords}
+
+\section{Introduction and Problem Statement}
+\label{sec:intro}
+This project is Phase~1 (machine-learning evaluation only) of an inventory image tagging system.
+The question is whether a small convolutional neural network (CNN), which learns spatial features, recognises similar
+clothing classes better than classical models on fixed representations. The classical models are logistic
+regression, $k$-NN, random forest and an RBF-kernel SVM; the fixed representations are flattened pixels and
+histogram-of-oriented-gradients (HOG) features. The outcome is open: we report what we measure. The final
+comparison covers nine models (four classical models on two representations, plus one CNN) on Fashion-MNIST.
+
+\input{related_work}
+
+\section{Dataset Description and EDA}
+\label{sec:dataset}
+% Owner: Akhil (LaTeX-ready section to be merged).
+\TBD
+
+\begin{figure}[t]
+\centering
+\figplaceholder{TBD: class distribution / sample images (Akhil)}
+\caption{Fashion-MNIST class distribution and example images. \TBD}
+\label{fig:eda}
+\end{figure}
+
+\section{Methodology and Preprocessing}
+\label{sec:method}
+We use the official split only. The 60{,}000 official training images are divided into a stratified
+54{,}000-image training split and a 6{,}000-image validation split with seed 42; the 10{,}000 official test
+images are used only once, at the final test gate (Section~\ref{sec:protocol}). Nothing (scalers, mean and
+standard deviation, or any other fitted preprocessing) is fitted on validation or test data. Pixel features are
+scaled to $[0,1]$. Logistic regression and the SVM use a standardisation step inside the pipeline; $k$-NN and
+random forest use no scaler; the CNN uses the mean and standard deviation of the training split. Final models are
+trained on the 54{,}000-image training split only, with no refit on training plus validation.
+
+\begin{table}[t]
+\centering
+\caption{Data splits used in all experiments.}
+\label{tab:splits}
+\begin{tabular}{lrl}
+\toprule
+Split & Images & Use \\
+\midrule
+Train & 54{,}000 & fitting \\
+Validation & 6{,}000 & model selection \\
+Test & 10{,}000 & final evaluation, once \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Handcrafted Feature Engineering}
+\label{sec:features}
+% Owner: Anant (LaTeX-ready section to be merged).
+\TBD
+
+\begin{figure}[t]
+\centering
+\figplaceholder{TBD: HOG example (Anant)}
+\caption{HOG feature example. \TBD}
+\label{fig:hog}
+\end{figure}
+
+\section{Classical ML Models}
+\label{sec:classical}
+% Owner: Tanish (LaTeX-ready section to be merged).
+\TBD
+
+\section{CNN Architecture and Training}
+\label{sec:cnn}
+% Owner: Manas (LaTeX-ready section to be merged).
+\TBD
+
+\begin{figure}[t]
+\centering
+\figplaceholder{TBD: CNN learning curves (Manas)}
+\caption{CNN training and validation learning curves. \TBD}
+\label{fig:curves}
+\end{figure}
+
+\section{Experimental Protocol and Evaluation Metrics}
+\label{sec:protocol}
+Model selection uses the highest validation macro-F1, with validation accuracy breaking ties; the SVM is tuned
+on a stratified 10{,}000-image subset of the training split. Before every final classical fit the fit time is
+estimated, and if it exceeds the limit the model is fitted on a disclosed stratified subset; the number of
+training images used is always reported. After selection the chosen configurations are written to a freeze file
+and all nine models are evaluated on the test images exactly once. Metrics, bootstrap confidence intervals and
+McNemar tests are described by Rohan: \TBD.
+
+\section{Results and Comparative Analysis}
+\label{sec:results}
+% Owner: Rohan. Fill every cell from results/*.csv and results/*.json; never retype numbers by hand.
+\begin{table}[t]
+\centering
+\caption{Test results for the nine models (measured once at the test gate).}
+\label{tab:results}
+\begin{tabular}{llrr}
+\toprule
+Model & Representation & Accuracy & Macro-F1 \\
+\midrule
+Logistic regression & pixels & \TBD & \TBD \\
+$k$-NN & pixels & \TBD & \TBD \\
+Random forest & pixels & \TBD & \TBD \\
+RBF-SVM & pixels & \TBD & \TBD \\
+Logistic regression & HOG & \TBD & \TBD \\
+$k$-NN & HOG & \TBD & \TBD \\
+Random forest & HOG & \TBD & \TBD \\
+RBF-SVM & HOG & \TBD & \TBD \\
+Small CNN & learned & \TBD & \TBD \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Inference time per image and parameter counts. \TBD}
+\label{tab:inference}
+\begin{tabular}{lrr}
+\toprule
+Model & ms/img (CPU) & Parameters \\
+\midrule
+\TBD & \TBD & \TBD \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\figplaceholder{TBD: model comparison plot (Rohan)}
+\caption{Accuracy and macro-F1 of the nine models with bootstrap confidence intervals. \TBD}
+\label{fig:comparison}
+\end{figure}
+
+\section{Confusion Matrices and Error Analysis}
+\label{sec:errors}
+% Owner: Rohan (LaTeX-ready section to be merged).
+\TBD
+
+\begin{figure}[t]
+\centering
+\figplaceholder{TBD: confusion matrices (Rohan)}
+\caption{Confusion matrices on the test set. \TBD}
+\label{fig:confusion}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\figplaceholder{TBD: per-class recall heatmap (Rohan)}
+\caption{Per-class recall of the nine models. \TBD}
+\label{fig:recall}
+\end{figure}
+
+\section{Discussion, Limitations and Future Improvements}
+\label{sec:discussion}
+\TBD{} (after results.)
+
+\section{Conclusion}
+\label{sec:conclusion}
+\TBD{} (after results.)
+
+\section*{Acknowledgment}
+\TBD
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
