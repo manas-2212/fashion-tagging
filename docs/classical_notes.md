@@ -102,3 +102,31 @@ Machine details: TBD (fill in own chip/RAM).
 | svm | hog | 218.5 | n/a | full 54,000 |
 
 Caveats: SVM estimates assume quadratic scaling (probably optimistic). Other grid values (SVM C=10, k=11, RF min_samples_leaf=3) were not probed. kNN predict times are extrapolated from a probe. Compare every estimate with the real fit time after the real runs.
+
+---
+## Dry run (Tanish): official 54,000/6,000 split, validation only, test data not used
+Source: results/tanish_dryrun_output.txt and results/tanish_dryrun.csv (local, not committed). This is NOT the official run; compare with Puneet's results before reporting.
+All 8 final fits used n_train_used = 54000 of 54000 (no subset). Machine details: TBD.
+
+### Estimated vs actual fit seconds (same hyperparameters only)
+| Pair | Params | Estimated (s) | Actual on 54,000 (s) | Actual / estimate |
+|---|---|---|---|---|
+| logreg pixels | C=0.1 | 6.4 | 9.8 | 1.5 |
+| logreg hog | C=0.1 | 5.1 | 9.3 | 1.8 |
+| rf pixels | min_samples_leaf=1 | 7.4 | 10.9 | 1.5 |
+| rf hog | min_samples_leaf=1 | 10.7 | 19.4 (tuning fit, same params) | 1.8 |
+
+SVM: the estimate was for C=1 (149.8 s pixels, 218.5 s HOG) but the final fits used C=10 (179.0 s, 211.9 s), so the comparison is not like-for-like; SVM C=1 on 54,000 was never fitted. k-NN fit is about 0 s; k-NN predict time on val/test was not measured separately: TBD.
+Linear extrapolation underestimated LogReg and RF fit time by about 1.5-1.8x here; every fit stayed far below the 1800 s limit.
+
+### Selection notes
+- The selected value is at the edge of the grid for 6 of 8 pairs (LogReg C=0.1 lowest, SVM C=10 highest, RF leaf=1 on pixels lowest, leaf=3 on HOG highest); only k-NN (k=7) is interior. The optimum may lie outside the grid; grids were not expanded (rule: no expansion without a runtime estimate and team agreement).
+- Validation differences of about 0.002-0.005 between candidates (e.g. k-NN k=3/5/7 on pixels) are of the same order as the sampling noise of a 6,000-image validation set (standard error roughly 0.0045 for accuracy near 0.86, binomial approximation), so those choices are weakly supported.
+- SVM: C was chosen on a 10,000-image subset and the final fit used 54,000. Validation accuracy of the 54,000 fit (0.9093 pixels, 0.9155 HOG) is higher than that of the 10,000-image tuning fit with the same C (0.8777, 0.8903), so tuning-time and final numbers are not comparable.
+- ConvergenceWarning: 4 warnings were printed (LogReg lbfgs reached max_iter=500). Reported, not hidden; max_iter was not changed (spec value).
+
+### LogReg convergence check (54,000 training images, max_iter=500)
+- logreg pixels C=0.1: n_iter=500 (max_iter=500), ConvergenceWarning=True
+- logreg pixels C=1.0: n_iter=500 (max_iter=500), ConvergenceWarning=True
+- logreg hog C=0.1: n_iter=300 (max_iter=500), ConvergenceWarning=False
+- logreg hog C=1.0: n_iter=500 (max_iter=500), ConvergenceWarning=True

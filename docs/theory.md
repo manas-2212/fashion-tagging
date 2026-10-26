@@ -16,7 +16,24 @@ Hyperparameters (C, k, leaf size) are set before training and not learned by the
 
 ## 4. Overfitting and generalisation
 A model overfits when it fits training noise: training accuracy is high while validation accuracy is lower. We measure the gap = train accuracy - validation accuracy (train accuracy on a disclosed stratified subsample). A gap is an observation; its causes (deep trees, small k, large C) are hypotheses that need separate evidence. For k-NN, train accuracy is inflated because a point is its own neighbour.
-Measured gaps: TBD (to be added after the real runs, observation first, hypotheses second).
+Measured gaps (dry run by Tanish: official 54,000/6,000 split, validation data only, test data not used; train accuracy on a stratified 5,000-image subsample of the training split; selected configuration per pair):
+
+| Model | Rep | Selected params | Train acc | Val acc | Gap |
+|---|---|---|---|---|---|
+| logreg | pixels | C=0.1 | 0.8814 | 0.8608 | 0.0206 |
+| knn | pixels | k=7 | 0.8850 | 0.8635 | 0.0215 |
+| rf | pixels | min_samples_leaf=1 | 1.0000 | 0.8858 | 0.1142 |
+| svm | pixels | C=10 | 0.9802 | 0.9093 | 0.0709 |
+| logreg | hog | C=0.1 | 0.9302 | 0.8797 | 0.0505 |
+| knn | hog | k=7 | 0.9124 | 0.8838 | 0.0286 |
+| rf | hog | min_samples_leaf=3 | 0.9958 | 0.8772 | 0.1186 |
+| svm | hog | C=10 | 1.0000 | 0.9155 | 0.0845 |
+
+Observations. The two random forests have the largest gaps (0.1142 on pixels, 0.1186 on HOG), with training accuracy 1.0000 and 0.9958. The SVMs come next (0.0709 on pixels, 0.0845 on HOG); the HOG SVM reaches training accuracy 1.0000. Logistic regression (0.0206, 0.0505) and k-NN (0.0215, 0.0286) have the smallest gaps; for k-NN each training point is among its own neighbours, so its train accuracy is inflated and its gap is not directly comparable. Gap size does not rank validation accuracy: the SVMs have the highest validation accuracy (0.9093 on pixels, 0.9155 on HOG) despite larger gaps than logistic regression and k-NN, while the random forests, with the largest gaps, are in the middle (0.8858, 0.8772). The SVM final fits used 54,000 images, whereas C was tuned on 10,000, so tuning-time validation scores (0.8777, 0.8903 for C=10) are not comparable with these numbers.
+
+Hypotheses (not tested here). H1: fully or nearly fully grown trees (min_samples_leaf 1 or 3) can fit training points almost exactly, and each training point is in-bag for about 63% of the trees, which would explain the near-perfect training accuracy of the forests. H2: C=10 with an RBF kernel gives a flexible boundary that fits the training data closely (training accuracy 1.0000 on HOG). H3: logistic regression is linear in its input features, so its capacity to fit the training data is limited, which may explain its small gaps. H4: voting over k=7 neighbours smooths the decision, which may keep the k-NN gap small. Testing these would require measuring train/validation gaps across the grid values (leaf size, C, k), which this dry run did not do.
+
+Status: these numbers come from a dry run and must be checked against the official results table before the report is final.
 
 ## 5. Data leakage
 Leakage is information from validation or test data influencing training. Concrete example from this project: if StandardScaler were fitted on train + validation images, its per-pixel mean and standard deviation would include validation statistics. Validation images would then be standardised with values partly computed from themselves, and validation scores would be slightly optimistic. We keep the scaler inside the Pipeline, so cross-split statistics cannot enter, and test that `scaler.mean_` equals the training-split mean and not the train+validation mean.
