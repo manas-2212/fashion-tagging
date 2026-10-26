@@ -18,7 +18,6 @@ from src.classical_models import (DEFAULT_GRIDS, estimate_fit_seconds,
                                   fit_classical, tune_classical)
 from src.config import (DATA_DIR, MAX_FIT_MINUTES, RESULTS_DIR, ROOT, SEED,
                         SVM_TUNE_N)
-from src.evaluation import predict_with_confidence
 from src.features import cached_features
 
 MODEL_NAMES = ("logreg", "knn", "rf", "svm")
@@ -192,6 +191,8 @@ def _check_prediction(name, y_pred, conf, n):
 def run_test_gate(frozen_path, models, X_test, y_test, cnn_predict_fn=None,
                   flag_path=RESULTS_DIR / "test_gate_done.flag"):
     """Evaluate all models on the test images exactly once. Test labels are used only to check shapes."""
+    # imported here so that tuning and fitting work before evaluation.py is merged; only the gate needs it
+    from src.evaluation import predict_with_confidence
     frozen_path, flag_path = Path(frozen_path), Path(flag_path)
     if not frozen_path.is_file():
         raise RuntimeError(f"Test gate refused: freeze file {frozen_path} is missing. "
