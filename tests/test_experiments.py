@@ -4,6 +4,7 @@ import importlib
 import inspect
 import itertools
 import json
+import re
 import sys
 import time
 import types
@@ -249,7 +250,8 @@ def test_runtime_gate_subsets_and_prints_when_estimate_too_large(mock, state, tm
     printed = capsys.readouterr().out
     expected = min(600, max(exp.MIN_GATED_SUBSET, int(600 * limit / est)))
     assert expected < 600
-    assert printed.count("n_train_used = ") == 8
+    # count only experiments.py lines "[model|rep] n_train_used = ..." (the real fit_classical prints its own too)
+    assert len(re.findall(r"^\[\w+\|\w+\] n_train_used = ", printed, flags=re.M)) == 8
     assert f"n_train_used = {expected} of 600" in printed
     for info in infos.values():
         assert info["gated"] is True and info["n_train_used"] == expected
