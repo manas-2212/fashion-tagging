@@ -1,0 +1,37 @@
+\section{Literature Review and Related Work}
+\label{sec:related}
+
+\subsection{Fashion-MNIST}
+Xiao, Rasul and Vollgraf introduce Fashion-MNIST, a set of 70{,}000 grayscale
+$28\times 28$ images of fashion products in 10 categories, with 7{,}000 images per category
+and an official split of 60{,}000 training and 10{,}000 test images~\cite{xiao2017fashion}.
+They present it as a direct drop-in replacement for MNIST: it shares the image size, data
+format and split structure, so existing MNIST code needs essentially only a different download
+location. Their motivation is that MNIST is popular because it is small, simply encoded and
+supported by common libraries, but it is an easy task; Fashion-MNIST aims to keep those
+advantages while being more challenging~\cite{xiao2017fashion}.
+
+The images are front-view thumbnails of 70{,}000 unique products from an online fashion shop,
+converted to $28\times 28$ grayscale by a seven-step pipeline. Labels are product silhouette
+codes assigned manually by in-house experts and reviewed by a separate team. The files use the
+MNIST format and are stored sorted by label, so shuffling is left to the user
+\cite{xiao2017fashion}; our train/validation split is therefore stratified and seeded. The
+benchmark in~\cite{xiao2017fashion} covers scikit-learn classifiers and contains no
+convolutional network.
+
+\subsection{Learned versus Hand-Designed Features}
+LeCun et al.\ review methods for handwritten character recognition and compare them on a
+standard handwritten digit task~\cite{lecun1998gradient}. Their abstract argues that
+multilayer networks trained by back-propagation can learn complex decision surfaces on
+high-dimensional patterns with minimal preprocessing, and reports that convolutional networks,
+which are designed for the variability of 2D shapes, outperform the other techniques compared
+in that study~\cite{lecun1998gradient}. This motivates the learned-feature side of our
+comparison.
+
+\subsection{Relation to This Work}
+We compare a small CNN, which learns spatial features, against four classical models
+(logistic regression, $k$-NN, random forest, RBF-SVM) on two fixed representations: flattened
+pixels and HOG features. Neither cited paper ran this experiment: \cite{xiao2017fashion}
+does not evaluate HOG or a CNN, and \cite{lecun1998gradient} studies handwritten digits and
+documents rather than clothing images. We therefore draw no conclusion from their reported
+results; our findings are the measurements in Section~\ref{sec:results}.
