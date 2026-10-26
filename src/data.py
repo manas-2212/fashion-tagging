@@ -132,3 +132,82 @@ def stratified_subset(X, y, n, seed=SEED):
         idx, _ = train_test_split(np.arange(len(y)), train_size=n, stratify=y, random_state=seed)
         idx = np.sort(idx)
     return X[idx], y[idx], idx
+
+
+# ======================= Second PR: data quality and structure =======================
+import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.metrics import accuracy_score, f1_score
+
+
+def _hash_images(X):
+    """One sha256 hex digest per image (hash of the raw 784 bytes)."""
+    return [hashlib.sha256(np.ascontiguousarray(img).tobytes()).hexdigest() for img in X]
+
+
+def _within_duplicates(hashes, max_examples=5):
+    """Number of extra copies (images identical to an EARLIER image) and a few (first, copy) index pairs."""
+    first, extra, examples = {}, 0, []
+    for i, h in enumerate(hashes):
+        if h in first:
+            extra += 1
+            if len(examples) < max_examples:
+                examples.append((int(first[h]), int(i)))
+        else:
+            first[h] = i
+    return extra, examples
+
+
+def find_duplicates(X_a, X_b=None):
+    """Hash-based exact-duplicate DIAGNOSTIC. Reports only; never alters or removes anything.
+
+    n_within_a / n_within_b: images that are an exact copy of an earlier image in the same array.
+    n_overlap: images in A that have an identical copy somewhere in B (indices in overlap_indices_a).
+    """
+    ha = _hash_images(X_a)
+    n_a, ex_a = _within_duplicates(ha)
+    out = {"n_within_a": n_a, "n_within_b": 0, "n_overlap": 0, "overlap_indices_a": [],
+           "examples_within_a": ex_a, "examples_within_b": []}
+    if X_b is not None:
+        hb = _hash_images(X_b)
+        out["n_within_b"], out["examples_within_b"] = _within_duplicates(hb)
+        set_b = set(hb)
+        out["overlap_indices_a"] = [i for i, h in enumerate(ha) if h in set_b]
+        out["n_overlap"] = len(out["overlap_indices_a"])
+    return out
+
+
+def pca_projection(X_train_uint8, n_components=50, seed=SEED):
+    """PCA fitted ONLY on the array passed in (pass the 54k TRAIN split). Returns (Z float32 (N,k), evr (k,))."""
+    flat = X_train_uint8.reshape(len(X_train_uint8), -1).astype(np.float32) / 255.0  # copy; input untouched
+    pca = PCA(n_components=n_components, random_state=seed)
+    Z = pca.fit_transform(flat)
+    return Z.astype(np.float32), pca.explained_variance_ratio_
+
+
+def class_centroid_distances(X, y):
+    """10x10 Euclidean distances between class mean images (pixel scale 0-1). Descriptive only."""
+    flat = X.reshape(len(X), -1).astype(np.float32) / 255.0
+    assert all((y == c).any() for c in range(NUM_CLASSES)), "every class must be present"
+    cents = np.stack([flat[y == c].mean(axis=0, dtype=np.float64) for c in range(NUM_CLASSES)])
+    D = np.sqrt(((cents[:, None, :] - cents[None, :, :]) ** 2).sum(axis=2))
+    return pd.DataFrame(D, index=CLASS_NAMES, columns=CLASS_NAMES)
+
+
+def sanity_baselines(X_tr, y_tr, X_val, y_val):
+    """Floor references on VALIDATION only (not part of the 9-model comparison)."""
+    # 1) majority class from the train labels (ties -> lowest class index)
+    majority = int(np.bincount(y_tr, minlength=NUM_CLASSES).argmax())
+    pred_maj = np.full(len(y_val), majority, dtype=np.int64)
+    # 2) nearest class mean (Euclidean) with means computed on TRAIN only
+    tr = X_tr.reshape(len(X_tr), -1).astype(np.float32) / 255.0
+    va = X_val.reshape(len(X_val), -1).astype(np.float32) / 255.0
+    cents = np.stack([tr[y_tr == c].mean(axis=0) for c in range(NUM_CLASSES)])
+    d2 = (va ** 2).sum(1, keepdims=True) - 2 * va @ cents.T + (cents ** 2).sum(1)[None, :]
+    pred_ncm = d2.argmin(axis=1).astype(np.int64)
+    rows = []
+    for name, pred in [("majority_class", pred_maj), ("nearest_class_mean", pred_ncm)]:
+        rows.append({"name": name,
+                     "val_accuracy": float(accuracy_score(y_val, pred)),
+                     "val_macro_f1": float(f1_score(y_val, pred, average="macro", labels=list(range(NUM_CLASSES)), zero_division=0))})
+    return pd.DataFrame(rows)
