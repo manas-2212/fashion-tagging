@@ -1,0 +1,5 @@
+config,hog_dim,extract_seconds,val_accuracy,val_macro_f1
+o9_ppc4x4_cpb2x2_L2-Hys (baseline),1296,TBD,TBD,TBD
+o9_ppc7x7_cpb2x2_L2-Hys,324,TBD,TBD,TBD
+o9_ppc2x2_cpb2x2_L2-Hys,6084,TBD,TBD,TBD
+o6_ppc4x4_cpb2x2_L2-Hys,864,TBD,TBD,TBD
