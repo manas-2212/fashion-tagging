@@ -5,7 +5,7 @@ Every statement is labelled OBSERVATION (backed by a number or figure) or HYPOTH
 ## 1. Dataset facts
 - OBSERVATION: official train (60,000) and test (10,000) images are 28x28 uint8 grayscale; pixel range 0-255; labels 0-9.
 - OBSERVATION: classes are exactly balanced: 6,000 per class in train, 1,000 per class in test.
-- OBSERVATION: the validation split is 6,000 images taken from the official train images (600 per class, seed 42), leaving 54,000 for training. Test images are not used for any statistic below.
+- OBSERVATION: the validation split is 6,000 images taken from the official train images (600 per class, seed 42), leaving 54,000 for training. The test images are read only for the integrity checks in the loading step and for the report-only duplicate check (run after the final evaluation); all other statistics below use the 54,000-image train split.
 
 ## 2. Data quality
 - OBSERVATION: 0 exact duplicates within train, within test, between train and test, and between our 54k train and 6k validation splits.
