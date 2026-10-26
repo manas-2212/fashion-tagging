@@ -35,7 +35,7 @@ translation: shifting an object by one pixel changes many features at once.
 ## 2. HOG (Histogram of Oriented Gradients)
 
 Original method: Dalal and Triggs, CVPR 2005 (**Puneet must verify the full reference before it enters the report**).
-Implementation: `skimage.feature.hog`, scikit-image 0.26.0 in the development sandbox (see §4), grayscale via
+Implementation: `skimage.feature.hog`, scikit-image 0.26.0 (the version on both machines used so far; see §4), grayscale via
 `channel_axis=None`.
 
 **Pipeline (fact).**
@@ -84,12 +84,20 @@ pipeline) needs care.
 
 ## 4. Runtime (ESTIMATE)
 
-Measured: serial HOG (ppc 4×4) on 1,000 **mock random-noise** images, 3 runs 0.596 / 0.656 / 0.638 s, median 0.638 s
-(≈0.64 ms/image). Linear extrapolation to 70,000 images (54k + 6k + 10k): **≈45 s — an estimate**, not measured on real
-Fashion-MNIST; real images should cost about the same because the work per image is fixed, but this is unverified.
-Flattening 1,000 images: well under a millisecond. Caching still pays off because the notebook is re-run repeatedly
-and the study extracts several HOG variants. Finer configs (ppc 2×2) will cost more; not yet measured.
-Machine: read from the sandbox only — "Intel(R) Xeon(R) Processor @ 2.80GHz", `os.cpu_count()` = 1. Your laptop will differ.
+Measured: serial HOG (ppc 4x4, o9) on 1,000 **mock random-noise** images, 3 runs per machine.
+The HOG code is serial, so it used a single core even though the M3 reports 8 logical CPUs.
+
+| Machine (as read from the system) | Runs (s) | Median (s) | ms/image | Linear estimate, 70,000 images |
+|---|---|---|---|---|
+| Apple M3, `hw.ncpu` = 8; numpy 2.5.4, scikit-image 0.26.0, Python 3.14.2 | 0.201, 0.203, 0.202 | 0.202 | 0.202 | ~14 s |
+| Development sandbox: Intel(R) Xeon(R) Processor @ 2.80GHz, `os.cpu_count()` = 1; numpy 2.4.4, scikit-image 0.26.0, Python 3.12.3 | 0.596, 0.656, 0.638 | 0.638 | 0.638 | ~45 s |
+
+These are **estimates** from linear extrapolation on random-noise images, not measured on real Fashion-MNIST.
+Real images should cost about the same because the work per image is fixed, but this is unverified.
+Flattening 1,000 images takes well under a millisecond (0.00029 s on the M3).
+Caching still pays off: the notebook is re-run repeatedly and the study extracts several HOG variants.
+Finer configs (ppc 2x2) will cost more; not yet measured.
+Timing on real data and the 6,084-feature fit time: TBD.
 
 ## 5. Sensitivity table (validation only, 10k train subset, LogReg C=1.0)
 
