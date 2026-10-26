@@ -1,5 +1,5 @@
 """EDA cells (Akhil). Run from anywhere: python docs/eda_cells.py
-Each '# %%' block is one notebook cell. Test LABELS are used only for the class-count bar plot (cell a)."""
+Each '# %%' block is one notebook cell. Held-out images and labels are not used."""
 # %% Setup: imports, data, split (fixed seed)
 import json
 import sys
@@ -17,16 +17,15 @@ from src.data import (class_centroid_distances, load_dataset, pca_projection,
 
 FIGURES_DIR.mkdir(exist_ok=True)
 RESULTS_DIR.mkdir(exist_ok=True)
-X_full, y_full, X_test, y_test = load_dataset()
+X_full, y_full, _, _ = load_dataset()
 s = prepare_splits(X_full, y_full)
 X_tr, y_tr = s["X_train"], s["y_train"]  # 54k TRAIN split: all statistics below use this only
 rng = np.random.default_rng(SEED)
 
-# %% a) Class distribution: train (official 60k) vs test (official 10k) label counts
+# %% a) Class distribution: train (official 60k) label counts
 fig, ax = plt.subplots(figsize=(10, 4))
 x, w = np.arange(10), 0.4
-ax.bar(x - w / 2, np.bincount(y_full, minlength=10), w, label="Train (official 60k)")
-ax.bar(x + w / 2, np.bincount(y_test, minlength=10), w, label="Test (official 10k)")
+ax.bar(x, np.bincount(y_full, minlength=10), 0.6, label="Train (official 60k)")
 ax.set_xticks(x)
 ax.set_xticklabels(CLASS_NAMES, rotation=45, ha="right")
 ax.set_xlabel("Class")
