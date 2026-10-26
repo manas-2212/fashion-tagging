@@ -3,6 +3,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{cite}
+\graphicspath{{../}{./}} % figures live in ../figures/ (or ./figures/ on Overleaf)
 
 % Every measured value is a placeholder until it is filled from results/*.csv and results/*.json.
 \newcommand{\TBD}{\textbf{TBD}}
@@ -38,17 +39,7 @@ comparison covers nine models (four classical models on two representations, plu
 
 \input{related_work}
 
-\section{Dataset Description and EDA}
-\label{sec:dataset}
-% Owner: Akhil (LaTeX-ready section to be merged).
-\TBD
-
-\begin{figure}[t]
-\centering
-\figplaceholder{TBD: class distribution / sample images (Akhil)}
-\caption{Fashion-MNIST class distribution and example images. \TBD}
-\label{fig:eda}
-\end{figure}
+\input{dataset_eda}
 
 \section{Methodology and Preprocessing}
 \label{sec:method}
