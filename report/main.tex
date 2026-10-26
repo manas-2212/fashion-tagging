@@ -45,7 +45,7 @@ comparison covers nine models (four classical models on two representations, plu
 \label{sec:method}
 We use the official split only. The 60{,}000 official training images are divided into a stratified
 54{,}000-image training split and a 6{,}000-image validation split with seed 42; the 10{,}000 official test
-images are used only once, at the final test gate (Section~\ref{sec:protocol}). Nothing (scalers, mean and
+images are used for evaluation only once, at the final test gate (Section~\ref{sec:protocol}); before the gate they are read only for loading and duplicate checks, and no test statistic enters any fitting or selection step. Nothing (scalers, mean and
 standard deviation, or any other fitted preprocessing) is fitted on validation or test data. Pixel features are
 scaled to $[0,1]$. Logistic regression and the SVM use a standardisation step inside the pipeline; $k$-NN and
 random forest use no scaler; the CNN uses the mean and standard deviation of the training split. Final models are
