@@ -46,7 +46,7 @@ These are tested by the measured results; the outcome is open.
 ## 12. CNN theory
 (Merged from docs/cnn_notes.md.)
 
-### CNN notes (Manas) — for docs/theory.md (Tanish)
+### CNN notes (contributed by Manas)
 
 Legend: **[F]** established fact (textbook / mathematically exact) · **[H]** hypothesis for THIS project, to be checked against measured results. Nothing here is a result.
 
