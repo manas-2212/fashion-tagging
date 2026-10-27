@@ -15,7 +15,7 @@ TBD (to be written by Anant)
 TBD (to be written by Tanish)
 
 ## Rohan
-TBD (to be written by Rohan)
+Verified CNN shapes and the benchmarking protocol. Editing the metrics theory notes and the viva question bank in my own words. Will review the evaluation module and own the Results and Confusion Matrices and Error Analysis sections of the report after the test gate.
 
 ## Puneet
 TBD (to be written by Puneet)
