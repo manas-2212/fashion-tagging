@@ -15,7 +15,7 @@ TBD (to be written by Anant)
 TBD (to be written by Tanish)
 
 ## Rohan
-Verified CNN shapes and the benchmarking protocol. Editing the metrics theory notes and the viva question bank in my own words. Will review the evaluation module and own the Results and Confusion Matrices and Error Analysis sections of the report after the test gate.
+Verified CNN shapes and the benchmarking protocol. Writing the metrics theory notes. Will review the evaluation module and own the Results and Confusion Matrices and Error Analysis sections of the report after the test gate.
 
 ## Puneet
 TBD (to be written by Puneet)
