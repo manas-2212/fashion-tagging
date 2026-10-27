@@ -1,0 +1,47 @@
+\section{CNN Architecture and Training}
+\label{sec:cnn}
+The CNN has three convolution blocks followed by a two-layer classifier (Table~\ref{tab:cnn}).
+Inputs are $28\times28$ grayscale images, scaled to $[0,1]$ and standardised with the mean and standard
+deviation of the 54{,}000-image training split only. The network outputs ten raw logits; the softmax is
+applied inside the loss and when probabilities are reported.
+
+\begin{table}[t]
+\centering
+\caption{CNN layers and trainable parameters (the total is verified by code).}
+\label{tab:cnn}
+\footnotesize
+\begin{tabular}{llrl}
+\toprule
+Layer & Output shape & Params & Calculation \\
+\midrule
+Conv $3{\times}3$, 1$\to$32, ReLU, MaxPool 2 & $32{\times}14{\times}14$ & 320 & $32(1\cdot 9+1)$ \\
+Conv $3{\times}3$, 32$\to$64, ReLU, MaxPool 2 & $64{\times}7{\times}7$ & 18{,}496 & $64(32\cdot 9+1)$ \\
+Conv $3{\times}3$, 64$\to$128, ReLU, MaxPool 2 & $128{\times}3{\times}3$ & 73{,}856 & $128(64\cdot 9+1)$ \\
+Flatten, Dropout, Linear, ReLU & 128 & 147{,}584 & $1152\cdot128+128$ \\
+Dropout, Linear & 10 & 1{,}290 & $128\cdot10+10$ \\
+\midrule
+Total & & 241{,}546 & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Each convolution uses padding 1, so only pooling changes the spatial size; $7\to3$ uses floor division, so the last
+row and column of the $7\times7$ map are ignored. Dropout ($p=0.5$) is applied only in the classifier, which holds
+most of the parameters.
+
+\paragraph{Training.}
+We minimise the cross-entropy loss with Adam~\cite{kingma2015adam} (learning rate $10^{-3}$, batch size 128,
+at most 30 epochs). Mini-batches are shuffled with a seeded generator. After every epoch the validation loss and
+accuracy are computed in evaluation mode (dropout off). Training stops when the validation loss has not improved for
+5 consecutive epochs, and the weights of the best epoch are restored; the test images play no role in this
+procedure. Training loss and accuracy in Fig.~\ref{fig:curves} are running averages over the mini-batches of
+each epoch with dropout active, so they are pessimistic compared with an evaluation-mode pass. The learning rate,
+batch size and dropout were not tuned. All results are from a single run with seed 42; run-to-run variation is not
+measured. The best epoch, training time and device are \TBD{} (filled from the notebook output).
+
+\begin{figure}[t]
+\centering
+\figfile{cnn_learning_curves.png}{TBD: CNN learning curves}
+\caption{CNN training and validation learning curves; the dashed line marks the epoch whose weights were kept.}
+\label{fig:curves}
+\end{figure}
