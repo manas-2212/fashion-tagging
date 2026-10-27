@@ -54,7 +54,7 @@ def flatten_pixels(X) -> np.ndarray:
     return out
 
 
-def hog_feature_dim(orientations=9, pixels_per_cell=(4, 4), cells_per_block=(2, 2), block_norm="L2-Hys") -> int:
+def hog_feature_dim(orientations=9, pixels_per_cell=(2, 2), cells_per_block=(2, 2), block_norm="L2-Hys") -> int:
     """Analytic HOG length for a 28x28 image (block_norm does not affect the length).
 
     skimage floors the number of cells (28 // ppc); blocks slide with stride 1 cell:
@@ -76,7 +76,7 @@ def _hog_dim_from_skimage(orientations=9, pixels_per_cell=(4, 4), cells_per_bloc
                    feature_vector=True, channel_axis=None).size)
 
 
-def extract_hog_features(X, orientations=9, pixels_per_cell=(4, 4), cells_per_block=(2, 2),
+def extract_hog_features(X, orientations=9, pixels_per_cell=(2, 2), cells_per_block=(2, 2),
                          block_norm="L2-Hys") -> np.ndarray:
     """uint8 (N,28,28) -> float32 (N,dim) HOG. Serial, deterministic, X not modified.
 
@@ -94,7 +94,7 @@ def extract_hog_features(X, orientations=9, pixels_per_cell=(4, 4), cells_per_bl
     return out
 
 
-def plot_hog_example(X, index, orientations=9, pixels_per_cell=(4, 4), cells_per_block=(2, 2),
+def plot_hog_example(X, index, orientations=9, pixels_per_cell=(2, 2), cells_per_block=(2, 2),
                      block_norm="L2-Hys", title=None):
     """Original image beside its HOG visualisation. visualize=True is used HERE ONLY."""
     import matplotlib.pyplot as plt

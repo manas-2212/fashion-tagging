@@ -35,7 +35,9 @@ def test_input_validation():
 
 
 def test_hog_dimension_analytic_matches_skimage():
-    assert F.hog_feature_dim() == 1296 == HOG_DIM == F._hog_dim_from_skimage()
+    assert F.hog_feature_dim(**HOG_PARAMS) == 6084 == HOG_DIM
+    assert F.hog_feature_dim() == HOG_DIM
+    assert F._hog_dim_from_skimage(**HOG_PARAMS) == HOG_DIM
     for cfg in F.DEFAULT_STUDY_CONFIGS + [dict(orientations=8, pixels_per_cell=(5, 5), cells_per_block=(1, 1))]:
         p = {**F._BASELINE, **cfg}
         assert F.hog_feature_dim(**p) == F._hog_dim_from_skimage(**p), p
@@ -95,7 +97,11 @@ def test_cache_roundtrip_and_key_changes(tmp_path):
     X, _ = mock(30)
     first = F.cached_features(X, "hog", "tr", cache_dir=tmp_path)
     files = sorted(p.name for p in tmp_path.glob("*.npy"))
-    assert len(files) == 1 and "hog_tr_N30" in files[0] and "o9_ppc4x4_cpb2x2_L2-Hys" in files[0]
+    assert (
+        len(files) == 1
+        and "hog_tr_N30" in files[0]
+        and "o9_ppc2x2_cpb2x2_L2-Hys" in files[0]
+    )
     original = F.extract_hog_features
     F.extract_hog_features = lambda *a, **k: (_ for _ in ()).throw(AssertionError("recomputed instead of loading"))
     try:

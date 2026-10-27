@@ -17,7 +17,7 @@ validation split. **Test data is never used.** Seed 42.
    RBF-SVM. With 6,000 validation images the sampling noise of an accuracy near 0.85–0.90 is roughly ±0.4 pp
    (one standard error, binomial approximation), so a 1 pp threshold is deliberately conservative.
 
-**Decision (after running):** TBD — study not yet executed on real data.
+**Decision (after running):** SWITCH to `orientations=9, pixels_per_cell=(2,2), cells_per_block=(2,2), block_norm="L2-Hys"` (6,084 features). Validation macro-F1 was 0.868348 versus 0.836344 for the baseline, an improvement of 0.032004 (+3.20 percentage points), exceeding the pre-written 0.010 threshold. The 6-orientation configuration also passed the threshold (0.848631; improvement +0.012287), but its improvement was smaller. The 7×7 configuration did not pass. This is evidence for the Logistic Regression descriptor choice, not proof that it is optimal for every classifier.
 
 ## 1. Flattened pixels
 
@@ -102,11 +102,14 @@ Timing on real data and the 6,084-feature fit time: TBD.
 ## 5. Sensitivity table (validation only, 10k train subset, LogReg C=1.0)
 
 | config | hog_dim | extract_seconds | val_accuracy | val_macro_f1 |
-|---|---|---|---|---|
-| o9, ppc 4×4, cpb 2×2 (baseline) | 1296 | TBD | TBD | TBD |
-| o9, ppc 7×7, cpb 2×2 | 324 | TBD | TBD | TBD |
-| o9, ppc 2×2, cpb 2×2 | 6084 | TBD | TBD | TBD |
-| o6, ppc 4×4, cpb 2×2 | 864 | TBD | TBD | TBD |
+|---|---:|---:|---:|---:|
+| o9, ppc 4×4, cpb 2×2 (baseline) | 1296 | 4.254 | 0.835167 | 0.836344 |
+| o9, ppc 7×7, cpb 2×2 | 324 | 1.692 | 0.834333 | 0.834319 |
+| o9, ppc 2×2, cpb 2×2 | 6084 | 18.165 | 0.867833 | 0.868348 |
+| o6, ppc 4×4, cpb 2×2 | 864 | 4.323 | 0.847500 | 0.848631 |
 
-`extract_seconds` = serial HOG time for the 10,000 subset + 6,000 validation images.
-Versions used when the study is run must be recorded here: TBD.
+The 2×2-cell configuration exceeded the baseline macro-F1 by 0.032004, passing the pre-registered +0.010 switch threshold. The 6-orientation configuration improved by 0.012287; the 7×7-cell configuration decreased by 0.002025. The selected configuration has 6,084 features, so its fitting time and memory costs must be assessed before final classical-model runs.
+
+**Environment:** Python 3.9.6, NumPy 2.0.2, scikit-learn 1.6.1, scikit-image 0.24.0 (active terminal environment; confirm the study used this same environment).
+
+**Timing scope:** `extract_seconds` measures serial HOG extraction for the 10,000-image stratified training subset plus the 6,000-image validation set. It excludes model fitting and prediction. The 2×2-cell configuration took 18.165 seconds for these 16,000 images, versus 4.254 seconds for the baseline.
