@@ -9,8 +9,11 @@ venv/
 .DS_Store
 .pytest_cache/
 
-results/test_gate_done.flag
 results/cnn_best.pt
 
-results/test_gate_done.flag
-results/cnn_best.pt
+report/missfont.log
+report/*.aux
+report/*.log
+report/*.bbl
+report/*.blg
+report/*.out

@@ -10,6 +10,11 @@
 % Stand-in for a figure that a teammate has not delivered yet (replace with \includegraphics).
 \newcommand{\figplaceholder}[1]{\fbox{\parbox[c][2.2cm][c]{0.85\columnwidth}{\centering #1}}}
 
+% Include figures/<name> if the notebook has produced it (relative to ../ or ./), else a visible placeholder.
+\newcommand{\figfile}[2]{%
+  \IfFileExists{../figures/#1}{\includegraphics[width=\columnwidth]{../figures/#1}}%
+  {\IfFileExists{figures/#1}{\includegraphics[width=\columnwidth]{figures/#1}}{\figplaceholder{#2}}}}
+
 \begin{document}
 
 \title{Inventory Image Tagging via Handcrafted Features\\and a Small CNN}
@@ -66,34 +71,11 @@ Test & 10{,}000 & final evaluation, once \\
 \end{tabular}
 \end{table}
 
-\section{Handcrafted Feature Engineering}
-\label{sec:features}
-% Owner: Anant (LaTeX-ready section to be merged).
-\TBD
+\input{features}
 
-\begin{figure}[t]
-\centering
-\figplaceholder{TBD: HOG example (Anant)}
-\caption{HOG feature example. \TBD}
-\label{fig:hog}
-\end{figure}
+\input{classical_models}
 
-\section{Classical ML Models}
-\label{sec:classical}
-% Owner: Tanish (LaTeX-ready section to be merged).
-\TBD
-
-\section{CNN Architecture and Training}
-\label{sec:cnn}
-% Owner: Manas (LaTeX-ready section to be merged).
-\TBD
-
-\begin{figure}[t]
-\centering
-\figplaceholder{TBD: CNN learning curves (Manas)}
-\caption{CNN training and validation learning curves. \TBD}
-\label{fig:curves}
-\end{figure}
+\input{cnn_architecture}
 
 \section{Experimental Protocol and Evaluation Metrics}
 \label{sec:protocol}
@@ -101,12 +83,35 @@ Model selection uses the highest validation macro-F1, with validation accuracy b
 on a stratified 10{,}000-image subset of the training split. Before every final classical fit the fit time is
 estimated, and if it exceeds the limit the model is fitted on a disclosed stratified subset; the number of
 training images used is always reported. After selection the chosen configurations are written to a freeze file
-and all nine models are evaluated on the test images exactly once. Metrics, bootstrap confidence intervals and
-McNemar tests are described by Rohan: \TBD.
+and all nine models are evaluated on the test images exactly once. 
+
+\paragraph{Metrics.}
+Accuracy is the fraction of correctly classified images. For class $c$, $F1_c = 2TP_c/(2TP_c+FP_c+FN_c)$, and
+macro-F1 is the unweighted mean of the ten $F1_c$ values, so every class counts equally. The test set has exactly
+1{,}000 images per class, so macro-averaged recall equals accuracy; macro-F1 differs because it also depends on
+precision. Confusion matrices have the true class in rows and the predicted class in columns.
+
+\paragraph{Uncertainty and paired comparison.}
+We report 95\% percentile bootstrap confidence intervals~\cite{efron1979bootstrap}: the 10{,}000 test images are
+resampled with replacement 1000 times (seed 42). These intervals capture the sampling noise of this test set for one
+trained model; they do not include the randomness of training. To compare the CNN with each classical model on the
+same images we use McNemar's test~\cite{mcnemar1947note} on the paired correctness of the two models (exact binomial
+test when there are fewer than 25 discordant pairs, otherwise a chi-square statistic with continuity correction), with a
+Bonferroni correction for the eight comparisons. This test also ignores training variance~\cite{dietterich1998approximate}.
+
+\paragraph{Inference cost.}
+Timing uses the same 10{,}000 test images in a fixed order, and excludes model loading, training and plotting. For the
+classical models we report ``predict only'' (precomputed features) and ``end-to-end'' (feature extraction from the raw
+images, then prediction) separately, as the median of three repeats after an untimed warm-up call. For the CNN the inputs
+are pre-normalised tensors, batch size 256, with three warm-up batches and the median of five repeats; the CPU is
+mandatory and a GPU is used if available. The notebook records the library versions and the hardware it ran on
+(\texttt{results/environment.json}); implementations are scikit-learn~\cite{pedregosa2011scikit},
+PyTorch~\cite{paszke2019pytorch} and scikit-image~\cite{vanderwalt2014scikit}.
 
 \section{Results and Comparative Analysis}
 \label{sec:results}
 % Owner: Rohan. Fill every cell from results/*.csv and results/*.json; never retype numbers by hand.
+\IfFileExists{results_table.tex}{\input{results_table}}{%
 \begin{table}[t]
 \centering
 \caption{Test results for the nine models (measured once at the test gate).}
@@ -128,6 +133,9 @@ Small CNN & learned & \TBD & \TBD \\
 \end{tabular}
 \end{table}
 
+}
+
+\IfFileExists{inference_table.tex}{\input{inference_table}}{%
 \begin{table}[t]
 \centering
 \caption{Inference time per image and parameter counts. \TBD}
@@ -141,10 +149,12 @@ Model & ms/img (CPU) & Parameters \\
 \end{tabular}
 \end{table}
 
+}
+
 \begin{figure}[t]
 \centering
-\figplaceholder{TBD: model comparison plot (Rohan)}
-\caption{Accuracy and macro-F1 of the nine models with bootstrap confidence intervals. \TBD}
+\figfile{model_comparison.png}{TBD: model comparison plot}
+\caption{Accuracy and macro-F1 of the nine models on the test set with 95\% bootstrap confidence intervals.}
 \label{fig:comparison}
 \end{figure}
 
@@ -155,15 +165,15 @@ Model & ms/img (CPU) & Parameters \\
 
 \begin{figure}[t]
 \centering
-\figplaceholder{TBD: confusion matrices (Rohan)}
-\caption{Confusion matrices on the test set. \TBD}
+\figfile{cm_cnn.png}{TBD: confusion matrix}
+\caption{Row-normalised confusion matrix of the CNN on the test set (rows: true class).}
 \label{fig:confusion}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\figplaceholder{TBD: per-class recall heatmap (Rohan)}
-\caption{Per-class recall of the nine models. \TBD}
+\figfile{per_class_recall.png}{TBD: per-class recall heatmap}
+\caption{Per-class recall of the nine models on the test set.}
 \label{fig:recall}
 \end{figure}
 
