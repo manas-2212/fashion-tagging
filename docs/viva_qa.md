@@ -134,25 +134,25 @@ The CNN's learning rate, batch size, dropout and architecture were not tuned, wh
 ## F. Evaluation (Rohan)
 
 **Q40. What is macro-F1 and why use it?**
-The unweighted mean of the ten per-class F1 scores, so each class counts equally. Because our test set is balanced, macro-averaged recall equals accuracy; macro-F1 differs because it also reflects precision, i.e. which class absorbs the mistakes.
+For each of the 10 classes we compute an F1 score, and macro-F1 is the plain average of those 10 numbers, so every class counts the same. Our test set is balanced, so macro-recall equals accuracy. Macro-F1 differs from accuracy because it also uses precision, which shows which class takes the wrong predictions.
 
 **Q41. What does a bootstrap confidence interval tell you?**
-How much the metric would vary if the 10,000 test images were resampled with replacement (1000 resamples, 95% percentile interval). It covers test-set sampling noise for one trained model, not training randomness.
+We resample the 10,000 test predictions with replacement 1,000 times, compute the metric each time, and take the 2.5% and 97.5% values as a 95% interval. It shows how much the score changes just because of which test images we happened to have. It does not include training randomness, because we trained each model once with one seed.
 
 **Q42. Why McNemar's test for model comparison?**
-Both models are evaluated on the same images, so their errors are paired; only the images where they disagree carry information. It is exact (binomial) for few disagreements and chi-square with continuity correction otherwise.
+Both models are tested on the same images, so their results are paired. Only the images where one model is right and the other is wrong tell us anything. If there are fewer than 25 such images we use an exact binomial test, otherwise a chi-square test with continuity correction.
 
 **Q43. Why do you correct for multiple comparisons?**
-We compare the CNN with eight classical models; with eight tests at the 5% level, the chance of at least one false positive by luck alone is about 34% (1 - 0.95^8), so we report Bonferroni-adjusted p-values.
+We compare the CNN with 8 classical models, so we run 8 tests. With 8 tests at the 5% level, the chance of at least one false positive is about 34% (1 - 0.95^8). We therefore multiply each p-value by 8 (Bonferroni), capped at 1.
 
 **Q44. Does a significant McNemar result prove the CNN is better in general?**
-No. It says the error rates differ on this test set for these single trained models; it ignores training variance and says nothing about other datasets.
+No. It only says that the two error rates differ on this test set for these single trained models. It does not cover other seeds or other datasets.
 
 **Q45. Why are the SVM's confidence values NaN?**
-It is fitted without probability estimates; confidence is only used to choose which examples to display, not in any metric.
+We fit the SVM without probability=True because that setting adds an internal cross-validation and makes training much slower. We only use confidence to choose which examples to display, never in a metric.
 
 **Q46. Which examples are shown in the error figures?**
-Correct examples: the first n in dataset order (not cherry-picked). Incorrect examples: the n most confident mistakes.
+Correct examples are the first n in dataset order, so they are not cherry-picked. Incorrect examples are the n mistakes where the model was most confident. For the SVM, confidence is NaN, so its mistakes come in dataset order.
 
 ## G. Result-dependent questions (fill after the single test-gate run; do not answer before)
 
