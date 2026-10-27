@@ -33,7 +33,7 @@ Before every final fit, estimate_fit_seconds probes on 5,000 images and extrapol
 ## Report section "Classical Machine Learning Models" (LaTeX-ready, for Puneet)
 ```latex
 \section{Classical Machine Learning Models}
-We compare four classifiers on two representations (flattened pixels, 784 features; HOG, 1296 features),
+We compare four classifiers on two representations (flattened pixels, 784 features; HOG, 6084 features),
 giving eight experiments. All models are trained on the 54{,}000-image training split; hyperparameters
 are chosen by validation macro-F1 on the 6{,}000-image validation split.
 
@@ -83,7 +83,7 @@ Hyperparameters were tuned on a stratified 10{,}000-image subset (see limitation
 5. **Why select on macro-F1 rather than accuracy?** Macro-F1 averages per-class F1 equally, so weak classes such as Shirt count as much as easy ones. Accuracy breaks ties.
 6. **Why not GridSearchCV with cross-validation?** We have an official fixed validation split and a runtime budget; CV would multiply fit cost, especially for SVM and k-NN.
 7. **Why not probability=True for the SVM?** It runs an internal cross-validation that multiplies training cost, so SVM confidence is NaN downstream.
-8. **Why is the logistic regression parameter count 7,850 for pixels?** 10 classes x 784 weights + 10 intercepts = 7,850; for HOG, 10 x 1,296 + 10 = 12,970.
+8. **Why is the logistic regression parameter count 7,850 for pixels?** 10 classes x 784 weights + 10 intercepts = 7,850; for the current HOG representation, 10 x 6,084 + 10 = 60,850.
 
 ---
 ## Runtime plan (probe estimates, 5,000-image stratified probe, first grid value per model)
@@ -123,7 +123,7 @@ Linear extrapolation underestimated LogReg and RF fit time by about 1.5-1.8x her
 - The selected value is at the edge of the grid for 6 of 8 pairs (LogReg C=0.1 lowest, SVM C=10 highest, RF leaf=1 on pixels lowest, leaf=3 on HOG highest); only k-NN (k=7) is interior. The optimum may lie outside the grid; grids were not expanded (rule: no expansion without a runtime estimate and team agreement).
 - Validation differences of about 0.002-0.005 between candidates (e.g. k-NN k=3/5/7 on pixels) are of the same order as the sampling noise of a 6,000-image validation set (standard error roughly 0.0045 for accuracy near 0.86, binomial approximation), so those choices are weakly supported.
 - SVM: C was chosen on a 10,000-image subset and the final fit used 54,000. Validation accuracy of the 54,000 fit (0.9093 pixels, 0.9155 HOG) is higher than that of the 10,000-image tuning fit with the same C (0.8777, 0.8903), so tuning-time and final numbers are not comparable.
-- ConvergenceWarning: 4 warnings were printed (LogReg lbfgs reached max_iter=500). Reported, not hidden; max_iter was not changed (spec value).
+- Historical dry-run notes report four ConvergenceWarnings, while the per-configuration summary below identifies three configurations that reached max_iter=500. The raw dry-run output is not present in this checkout, so the count cannot currently be reconciled. Do not describe the historical run as independently verified.
 
 ### LogReg convergence check (54,000 training images, max_iter=500)
 - logreg pixels C=0.1: n_iter=500 (max_iter=500), ConvergenceWarning=True

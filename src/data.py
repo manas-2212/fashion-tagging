@@ -64,6 +64,90 @@ def load_dataset(root=DATA_DIR):
     return X_train, y_train, X_test, y_test
 
 
+
+def load_training_dataset(root=DATA_DIR):
+    """Load only the official training split; never instantiate the test dataset."""
+    root = Path(root)
+    root.mkdir(parents=True, exist_ok=True)
+    try:
+        from torchvision.datasets import FashionMNIST
+        ds = FashionMNIST(root=str(root), train=True, download=True)
+        return (np.array(ds.data.numpy(), dtype=np.uint8),
+                np.array(ds.targets.numpy(), dtype=np.int64))
+    except Exception as err:
+        fb = root / "idx_fallback"
+        names = (IDX_FILES["train_x"], IDX_FILES["train_y"])
+        if not all((fb / name).exists() for name in names):
+            raise RuntimeError(
+                f"Training dataset load failed ({err!r}) and training IDX files "
+                f"were not found in {fb}."
+            ) from err
+        return (_read_idx_images(fb / IDX_FILES["train_x"]),
+                _read_idx_labels(fb / IDX_FILES["train_y"]))
+
+
+def load_test_dataset(root=DATA_DIR):
+    """Load only the official held-out test split; call only in notebook section 8."""
+    root = Path(root)
+    root.mkdir(parents=True, exist_ok=True)
+    try:
+        from torchvision.datasets import FashionMNIST
+        ds = FashionMNIST(root=str(root), train=False, download=True)
+        return (np.array(ds.data.numpy(), dtype=np.uint8),
+                np.array(ds.targets.numpy(), dtype=np.int64))
+    except Exception as err:
+        fb = root / "idx_fallback"
+        names = (IDX_FILES["test_x"], IDX_FILES["test_y"])
+        if not all((fb / name).exists() for name in names):
+            raise RuntimeError(
+                f"Test dataset load failed ({err!r}) and test IDX files "
+                f"were not found in {fb}."
+            ) from err
+        return (_read_idx_images(fb / IDX_FILES["test_x"]),
+                _read_idx_labels(fb / IDX_FILES["test_y"]))
+
+
+def verify_training_dataset(X, y):
+    """Integrity checks for the official training split only."""
+    assert X.shape == (N_TRAIN_FULL, 28, 28), X.shape
+    assert y.shape == (N_TRAIN_FULL,), y.shape
+    assert X.dtype == np.uint8 and y.dtype == np.int64
+    assert int(X.min()) >= 0 and int(X.max()) <= 255
+    assert int(y.min()) >= 0 and int(y.max()) < NUM_CLASSES
+    counts = np.bincount(y, minlength=NUM_CLASSES)
+    assert (counts == N_TRAIN_FULL // NUM_CLASSES).all(), counts
+    try:
+        from torchvision.datasets import FashionMNIST
+        assert list(FashionMNIST.classes) == list(CLASS_NAMES)
+        aligned = True
+    except ImportError:
+        aligned = None
+    return {
+        "train_shape": list(X.shape),
+        "pixel_min": int(X.min()),
+        "pixel_max": int(X.max()),
+        "train_class_counts": counts.tolist(),
+        "classes_aligned_with_torchvision": aligned,
+    }
+
+
+def verify_test_dataset(X, y):
+    """Integrity checks for test data; call only inside the final evaluation section."""
+    assert X.shape == (N_TEST, 28, 28), X.shape
+    assert y.shape == (N_TEST,), y.shape
+    assert X.dtype == np.uint8 and y.dtype == np.int64
+    assert int(X.min()) >= 0 and int(X.max()) <= 255
+    assert int(y.min()) >= 0 and int(y.max()) < NUM_CLASSES
+    counts = np.bincount(y, minlength=NUM_CLASSES)
+    assert (counts == N_TEST // NUM_CLASSES).all(), counts
+    return {
+        "test_shape": list(X.shape),
+        "pixel_min": int(X.min()),
+        "pixel_max": int(X.max()),
+        "test_class_counts": counts.tolist(),
+    }
+
+
 def verify_dataset(X_train_full, y_train_full, X_test, y_test):
     """Assert the data contract; return a dict of findings. Raises AssertionError on failure."""
     assert X_train_full.shape == (N_TRAIN_FULL, 28, 28), X_train_full.shape

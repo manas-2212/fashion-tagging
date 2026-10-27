@@ -208,6 +208,10 @@ def run_test_gate(frozen_path, models, X_test, y_test, cnn_predict_fn=None,
     n = len(X_test)
     if len(y_test) != n:
         raise ValueError(f"X_test has {n} rows but y_test has {len(y_test)}")
+    if cnn_predict_fn is None:
+        raise RuntimeError(
+            "Test gate refused: cnn_predict_fn is required; all 9 models must be evaluated."
+        )
 
     frozen_sha = hashlib.sha256(frozen_path.read_bytes()).hexdigest()
     print(f"Test gate open: {n} test images, freeze sha256 = {frozen_sha}")
@@ -216,14 +220,11 @@ def run_test_gate(frozen_path, models, X_test, y_test, cnn_predict_fn=None,
     for key in CLASSICAL_KEYS:
         y_pred, conf = predict_with_confidence(models[key], feats[key[1]])
         results[key] = _check_prediction(key_to_str(key), y_pred, conf, n)
-    if cnn_predict_fn is not None:
-        y_pred, probs = cnn_predict_fn(X_test)
-        probs = np.asarray(probs, dtype=float)
-        if probs.shape != (n, 10):
-            raise ValueError(f"cnn: expected probabilities of shape ({n}, 10), got {probs.shape}")
-        results["cnn"] = _check_prediction("cnn", y_pred, probs.max(axis=1), n)
-    else:
-        print("WARNING: no cnn_predict_fn given; the CNN is NOT evaluated in this gate run.")
+    y_pred, probs = cnn_predict_fn(X_test)
+    probs = np.asarray(probs, dtype=float)
+    if probs.shape != (n, 10):
+        raise ValueError(f"cnn: expected probabilities of shape ({n}, 10), got {probs.shape}")
+    results["cnn"] = _check_prediction("cnn", y_pred, probs.max(axis=1), n)
 
     flag_path.parent.mkdir(parents=True, exist_ok=True)
     try:
