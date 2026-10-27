@@ -1,0 +1,40 @@
+\section{Handcrafted Feature Engineering}
+\label{sec:features}
+We use two fixed representations. \emph{Flattened pixels} are the $28\times28$ image reshaped row by row into a
+784-dimensional vector with values in $[0,1]$. They keep the absolute grey level at every location but treat each pixel
+as an independent column: logistic regression, $k$-NN with Euclidean distance, the RBF-SVM and the random forest give
+the same results if the columns of all images are permuted in the same way, so these models cannot use the fact that
+two pixels are neighbours.
+
+\emph{Histogram of oriented gradients} (HOG)~\cite{dalal2005histograms} describes local edge structure. We use the
+implementation in scikit-image~\cite{vanderwalt2014scikit}: image gradients are computed per pixel; each cell of
+$4\times4$ pixels collects a histogram of 9 unsigned orientation bins (0--180$^\circ$) weighted by gradient magnitude;
+overlapping blocks of $2\times2$ cells, moved one cell at a time, are normalised with L2-Hys (L2 normalisation,
+clipping at 0.2, renormalisation) and concatenated. For a $28\times28$ image this gives $28/4=7$ cells per axis,
+$7-2+1=6$ blocks per axis, and a feature vector of length
+\begin{equation}
+6\cdot 6\cdot(2\cdot 2)\cdot 9 = 1296,
+\end{equation}
+which we verified against the library output. Block normalisation makes the descriptor less sensitive to local
+contrast, but HOG discards absolute grey level.
+
+\paragraph{HOG parameter study.}
+Before any model comparison, the HOG parameters could change once, based on validation data only. Four
+configurations (the baseline above, $7\times7$ cells, $2\times2$ cells, and 6 orientations) were compared with
+logistic regression trained on a stratified 10{,}000-image subset of the training split and scored on the validation
+split. The decision rule was fixed in advance: switch only if the validation macro-F1 exceeds the baseline by more than
+0.010; otherwise keep the baseline. The study uses one model, one subset and one seed, so it is evidence for a choice
+and not proof of the best descriptor. Outcome: \TBD{} (from \texttt{results/hog\_sensitivity.csv}).
+
+\paragraph{Leakage.}
+HOG and flattening are fixed functions applied to each image independently; nothing is fitted, so computing them on
+all splits creates no leakage. Features are cached on disk and keyed by their kind, split, image count and HOG
+parameters. The only fitted preprocessing, the standardisation used by logistic regression and the SVM, sits inside the
+model pipeline and is fitted on the training split.
+
+\begin{figure}[t]
+\centering
+\figfile{hog_example.png}{TBD: HOG example}
+\caption{A training image and its HOG representation.}
+\label{fig:hog}
+\end{figure}
