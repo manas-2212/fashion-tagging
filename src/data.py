@@ -1,6 +1,6 @@
 """Data loading, verification and splitting (Milestone M1, owner: Akhil).
 
-Only load_dataset / verify_dataset read the official test images (shape and label checks).
+Only load_dataset, verify_dataset (integrity checks) and find_duplicates (report-only, run after the final evaluation) read the official test images.
 prepare_splits and stratified_subset only ever see the arrays they are given.
 """
 import gzip

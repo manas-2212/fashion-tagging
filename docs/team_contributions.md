@@ -19,7 +19,7 @@ Feature extraction and caching (`src/features.py`), the HOG study design and dec
 Classical models, tuning, runtime planning and the overfit check (`src/classical_models.py`, `docs/classical_notes.md`), and the theory document (`docs/theory.md`).
 
 ## Rohan
-Evaluation metrics, bootstrap intervals, McNemar test, error analysis and the viva question bank (`src/evaluation.py`, `docs/metrics_theory.md`, `docs/error_analysis_notes.md`, `docs/viva_qa.md`).
+Verified CNN shapes and the benchmarking protocol. Writing the metrics theory notes. Will review the evaluation module and own the Results and Confusion Matrices and Error Analysis sections of the report after the test gate.
 
 ## Puneet
 Repository, shared configuration, experiment orchestration with the freeze and one-shot test gate (`src/config.py`, `src/experiments.py`, `src/reporting.py`), literature review, README and the LaTeX report.
