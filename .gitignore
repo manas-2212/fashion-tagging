@@ -10,3 +10,10 @@ venv/
 .pytest_cache/
 
 results/cnn_best.pt
+
+report/missfont.log
+report/*.aux
+report/*.log
+report/*.bbl
+report/*.blg
+report/*.out
