@@ -26,7 +26,7 @@ Total & & 241{,}546 & \\
 \end{table}
 
 Each convolution uses padding 1, so only pooling changes the spatial size; $7\to3$ uses floor division, so the last
-row and column of the $7\times7$ map are ignored. Dropout ($p=0.5$) is applied only in the classifier, which holds
+row and column of the $7\times7$ map are ignored. Dropout~\cite{srivastava2014dropout} ($p=0.5$) is applied only in the classifier, which holds
 most of the parameters.
 
 \paragraph{Training.}
