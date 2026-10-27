@@ -1,0 +1,21 @@
+\begin{table*}[t]
+\centering
+\caption{Inference timing on 10,000 test images. Classical values are single timed passes after an untimed warm-up; treat as preliminary. Predict-only uses precomputed features, while end-to-end includes feature extraction. CNN CPU/GPU timing uses pre-normalised tensors and is not directly comparable to classical end-to-end timing.}
+\label{tab:inference}
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Model & Representation & Predict-only CPU (ms/img) & End-to-end CPU (ms/img) & CNN GPU (ms/img) & Fit time (s) \\
+\midrule
+Logistic regression & pixels & 0.008830 & 0.010633 & -- & 131.48 \\
+k-NN & pixels & 2.255952 & 2.120674 & -- & 0.02 \\
+Random forest & pixels & 0.056275 & 0.048987 & -- & 125.09 \\
+RBF-SVM & pixels & 14.804295 & 14.560057 & -- & 267.66 \\
+Logistic regression & HOG & 0.056755 & 3.302105 & -- & 393.61 \\
+k-NN & HOG & 15.137228 & 18.482470 & -- & 0.12 \\
+Random forest & HOG & 0.082839 & 3.329037 & -- & 348.48 \\
+RBF-SVM & HOG & 48.426658 & 51.899920 & -- & 322.48 \\
+Small CNN & learned & 0.440153 & not measured & 0.011625 & 49.01 \\
+\bottomrule
+\end{tabular}
+\end{table*}

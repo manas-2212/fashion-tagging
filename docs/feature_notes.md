@@ -97,7 +97,7 @@ Real images should cost about the same because the work per image is fixed, but 
 Flattening 1,000 images takes well under a millisecond (0.00029 s on the M3).
 Caching still pays off: the notebook is re-run repeatedly and the study extracts several HOG variants.
 Finer configs (ppc 2x2) will cost more; not yet measured.
-Timing on real data and the 6,084-feature fit time: TBD.
+The real-data validation sensitivity study measured 18.165 seconds to extract the 6,084-feature configuration for the 10,000-image training subset plus 6,000 validation images. Final full-data HOG fit times were: logistic regression 393.61 s, k-NN 0.12 s, random forest 348.48 s; the HOG RBF-SVM was runtime-gated to 11,770 training images and took 322.48 s.
 
 ## 5. Sensitivity table (validation only, 10k train subset, LogReg C=1.0)
 

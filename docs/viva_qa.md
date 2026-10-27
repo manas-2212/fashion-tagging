@@ -2,7 +2,7 @@
 
 Compiled by Manas from each owner's answers (`docs/classical_notes.md`, `docs/eda_notes.md`, `docs/feature_notes.md`, `docs/cnn_notes.md`, `docs/metrics_theory.md`). **Rohan owns this file**: edit the answers into your own words and add the questions you expect.
 
-Rules for answering: answer in your own words; say "we measured X" only if the file in `results/` shows it; separate what is established from what is a hypothesis; if you do not know, say what you would check. Result-dependent answers are marked **TBD** below and must be filled from `results/*.csv` after the test gate.
+Rules for answering: answer in your own words; say "we measured X" only if the file in `results/` shows it; separate what is established from what is a hypothesis; if you do not know, say what you would check. Result-dependent answers below are filled from the completed notebook outputs; restore generated result files from the original Colab run before relying on this ZIP as a reproducibility package.
 
 ## A. Project, protocol and leakage (Puneet)
 
@@ -157,22 +157,22 @@ Correct examples are the first n in dataset order, so they are not cherry-picked
 ## G. Result-dependent questions (fill after the single test-gate run; do not answer before)
 
 **Q47. Which model had the highest test macro-F1, and is its lead over the runner-up outside the confidence intervals?**
-TBD
+**Answer:** The CNN had the highest macro-F1 (0.9269; 95% CI 0.9214–0.9321). The runner-up was pixel RBF-SVM (0.8951; CI 0.8889–0.9008). These intervals do not overlap, and the paired McNemar comparison was significant after Bonferroni correction (adjusted p ≈ 1.14×10⁻²⁸).
 
 **Q48. Did the CNN beat the best classical model on pixels and on HOG? What do the McNemar p-values say?**
-TBD
+**Answer:** Yes on both representations. Against pixel RBF-SVM, the CNN comparison had adjusted p ≈ 1.14×10⁻²⁸; against HOG RBF-SVM, adjusted p ≈ 1.92×10⁻⁵¹. All eight CNN-vs-classical adjusted p-values were significant. This is paired evidence on one test set, not a guarantee of generalisation across seeds or datasets.
 
 **Q49. Which classes were confused most, and does this match the class-centroid distances in the EDA?**
-TBD
+**Answer:** The leading CNN confusion was Shirt→T-shirt/top (99 examples; 9.9% of true Shirts), then T-shirt/top→Shirt (65; 6.5%), Shirt→Coat (62; 6.2%), and Shirt→Pullover (60; 6.0%). The EDA notes describe Shirt, Pullover, and Coat as overlapping in PCA and having close class means, which is qualitatively consistent; centroid distance is descriptive and does not prove the cause of each error.
 
 **Q50. How do inference times compare (predict-only vs end-to-end vs CNN on CPU/GPU), and on which hardware?**
-TBD
+**Answer:** The saved timings are single timed passes after warm-up, so treat them as preliminary. For pixels, CPU predict-only / end-to-end ms per image were: logistic regression 0.0088/0.0106, k-NN 2.256/2.121, random forest 0.0563/0.0490, and RBF-SVM 14.804/14.560. For HOG, they were 0.0568/3.302, 15.137/18.482, 0.0828/3.329, and 48.427/51.900 respectively. CNN CPU tensor inference was 0.4402 ms/image and Tesla T4 GPU tensor inference 0.0116 ms/image; these use pre-normalised tensors and are not directly comparable to classical end-to-end timings.
 
 **Q51. Did any final fit hit the runtime gate? What was `n_train_used` for each model?**
-TBD
+**Answer:** Seven classical configurations used all 54,000 training images. HOG RBF-SVM was runtime-gated to 11,770 of 54,000 because the estimated full fit exceeded 1,800 seconds. CNN trained on 54,000 images. Final classical fit times: logreg pixels 131.48 s; k-NN pixels 0.02 s; RF pixels 125.09 s; SVM pixels 267.66 s; logreg HOG 393.61 s; k-NN HOG 0.12 s; RF HOG 348.48 s; SVM HOG 322.48 s.
 
 **Q52. Did logistic regression converge within 500 iterations, and were any selected hyperparameters at the edge of their grid?**
-TBD
+**Answer:** Pixel logistic regression reached the configured 500-iteration limit with a convergence warning, so convergence was not established. The selected grid values were at boundaries in several searches; the small grids were retained rather than expanded after the freeze. This limits claims that the chosen hyperparameters are global optima.
 
 **Q53. Was the HOG configuration changed by the sensitivity study?**
-TBD
+**Answer:** Yes. The selected HOG configuration uses 9 orientations, 2×2 pixels per cell, 2×2 cells per block, and L2-Hys. Validation macro-F1 was 0.868348 compared with 0.836344 for the 4×4-pixel-cell baseline, an improvement of 0.032004, exceeding the pre-set 0.010 threshold.

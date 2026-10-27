@@ -9,7 +9,7 @@ read off the measured files in `results/` after the single test-gate run.
 2. Hypotheses go in a separate paragraph, labelled as hypotheses, and are marked "supported" or "not supported" by a number you cite.
 3. No cherry-picking: "correct" examples are the first n in dataset order; "incorrect" examples are the n most confident mistakes (the code says so in its docstring; state this in the caption).
 4. The test set is used once. Error analysis uses the gate's saved predictions (`results/test_gate_outputs.npz`) and nothing is re-evaluated.
-5. Use "TBD" until measured. Never retype numbers by hand: copy from `results/metrics_with_ci.csv`, `results/per_class_recall.csv`, `results/mcnemar_cnn_vs_classical.csv`.
+5. Use the completed notebook outputs and report tables as the measured source. In this ZIP snapshot, the generated CSV/NPZ artifacts are missing; restore them from the completed Colab run rather than regenerating the one-shot test gate.
 
 ## 1. Files produced by the notebook (section 9, 11, 12)
 | File | Content |
@@ -46,14 +46,14 @@ recall = pd.read_csv(RESULTS_DIR / "per_class_recall.csv", index_col=0)
 display(recall.round(3))
 ```
 
-## 5. Structure of the report section (fill every TBD from the files)
+## 5. Completed report section summary
 1. One paragraph: overall ranking by macro-F1 with CIs (Table `tab:results`); say which differences are inside overlapping CIs.
 2. One paragraph: per-class recall (Fig. `fig:recall`): weakest and strongest classes.
 3. One paragraph: top confusions of the CNN (Fig. `fig:confusion`) and of the best classical model.
 4. One paragraph: McNemar results (cite adjusted p and discordant counts); remind the reader of the limits (one seed, one test set).
 5. One paragraph: hypotheses H1–H3, each marked supported / not supported with a number.
 
-## 6. Discussion and conclusion checklist (for Puneet, after results exist)
+## 6. Discussion and conclusion checks (results now recorded in the report)
 - Answer the research question in one sentence using the measured table only; if the CNN is not clearly better (overlapping CIs, non-significant McNemar), say so.
 - Limitations to state: one dataset (28×28 grayscale), one seed, one official split, small hyperparameter grids (≤ 4 values; some selected values may sit at a grid edge, see `docs/classical_notes.md`), CNN hyperparameters not tuned, SVM tuned on a 10,000-image subset, LogReg convergence warnings if they occur (`max_iter = 500`), results may not transfer to real inventory photos.
 - Future work: more seeds, larger grids, data augmentation, deeper CNNs, real inventory images.

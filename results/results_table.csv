@@ -1,0 +1,10 @@
+model,representation,training_config,n_train_used,accuracy,macro_f1,infer_cpu_predict_only_ms_per_img,infer_cpu_end_to_end_ms_per_img,infer_gpu_ms_per_img,params,params_note,fit_seconds,notes
+Logistic regression,pixels,C=0.1,54000,0.8411,0.8403173628100753,0.008830278700042982,0.010632806300054653,n/a (CPU only),7850,weights + intercepts,131.484911001,-
+k-NN,pixels,n_neighbors=7,54000,0.85,0.8492889119299317,2.2559515779999857,2.120673890699982,n/a (CPU only),n/a,non-parametric; stores N x d training values,0.016636402000585804,-
+Random forest,pixels,min_samples_leaf=1,54000,0.8756,0.8741347000096829,0.056274936699992395,0.04898745070004225,n/a (CPU only),1812762,total tree nodes; not comparable to weights,125.08697868199943,-
+RBF-SVM,pixels,C=10,54000,0.8953,0.8950544614549745,14.804294920900066,14.560057274199972,n/a (CPU only),18996,support vectors; not comparable to weights,267.66174866599977,hyperparameters tuned on a stratified subset of 10000 of 54000 training images
+Logistic regression,HOG,C=0.1,54000,0.8698,0.8701928910876836,0.05675510420005594,3.302105188200039,n/a (CPU only),60850,weights + intercepts,393.6141255319999,-
+k-NN,HOG,n_neighbors=5,54000,0.8653,0.8621213904713008,15.13722812549986,18.48246964049995,n/a (CPU only),n/a,non-parametric; stores N x d training values,0.11676369799988606,-
+Random forest,HOG,min_samples_leaf=1,54000,0.8636,0.861800675370976,0.08283938770000532,3.329036891099895,n/a (CPU only),2250888,total tree nodes; not comparable to weights,348.48490290000063,-
+RBF-SVM,HOG,C=10,11770,0.8817,0.8815886510758733,48.426657569099916,51.89992033680009,n/a (CPU only),7992,support vectors; not comparable to weights,322.48032249599964,hyperparameters tuned on a stratified subset of 10000 of 54000 training images; final fit on a subset (runtime gate)
+Small CNN,learned,"Adam lr=0.001, batch 128, dropout 0.5, best epoch 24 (max 30, patience 5)",54000,0.9274,0.9268998664071187,0.4401525310000579,not measured (inputs are pre-normalised tensors),0.011624715499965532,241546,trainable parameters,49.01435761099856,single seed 42; fit_seconds includes per-epoch validation passes

@@ -1,6 +1,6 @@
 \section{Classical Machine Learning Models}
 \label{sec:classical}
-We compare four classifiers on two representations (flattened pixels, 784 features; HOG, 1296 features),
+We compare four classifiers on two representations (flattened pixels, 784 features; HOG, 6084 features),
 giving eight experiments. All models are trained on the 54{,}000-image training split; hyperparameters
 are chosen by validation macro-F1 on the 6{,}000-image validation split.
 
@@ -39,8 +39,7 @@ The grids searched on the validation split are in Table~\ref{tab:grids}; all oth
 except those stated above (random forest: 200 trees; SVM: RBF kernel with $\gamma=$ ``scale''; logistic regression:
 at most 500 iterations). The selected value is the one with the highest validation macro-F1, with validation accuracy
 breaking ties. Before every final fit the fit time is estimated; a model whose estimate exceeds 30 minutes would be
-fitted on a disclosed stratified subset, and the number of training images used is always reported. The numbers used
-are \TBD{} (from \texttt{results/fit\_info.json}).
+fitted on a disclosed stratified subset, and the number of training images used is always reported. In the completed run, seven classical configurations used all 54,000 training images. The HOG RBF-SVM was runtime-gated to a stratified subset of 11,770 images because its estimated full fit exceeded the 30-minute limit. Final fit times ranged from 0.02 seconds for pixel k-NN to 393.61 seconds for HOG logistic regression. The pixel logistic-regression fit reached the configured 500-iteration limit with a convergence warning; its result is reported as run, not as proof of convergence.
 
 \begin{table}[t]
 \centering

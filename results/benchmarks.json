@@ -1,0 +1,308 @@
+[
+  {
+    "model": "logreg",
+    "rep": "pixels",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 0.08830278700042982,
+    "per_image_ms": 0.008830278700042982,
+    "repeats_s": [
+      0.08830278700042982
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": null,
+    "label": "predict only (precomputed features)"
+  },
+  {
+    "model": "logreg",
+    "rep": "pixels",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 0.10632806300054654,
+    "per_image_ms": 0.010632806300054653,
+    "repeats_s": [
+      0.10632806300054654
+    ],
+    "includes_preprocessing": true,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": null,
+    "label": "end-to-end from raw images"
+  },
+  {
+    "model": "knn",
+    "rep": "pixels",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 22.559515779999856,
+    "per_image_ms": 2.2559515779999857,
+    "repeats_s": [
+      22.559515779999856
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": -1,
+    "label": "predict only (precomputed features)"
+  },
+  {
+    "model": "knn",
+    "rep": "pixels",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 21.206738906999817,
+    "per_image_ms": 2.120673890699982,
+    "repeats_s": [
+      21.206738906999817
+    ],
+    "includes_preprocessing": true,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": -1,
+    "label": "end-to-end from raw images"
+  },
+  {
+    "model": "rf",
+    "rep": "pixels",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 0.562749366999924,
+    "per_image_ms": 0.056274936699992395,
+    "repeats_s": [
+      0.562749366999924
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": -1,
+    "label": "predict only (precomputed features)"
+  },
+  {
+    "model": "rf",
+    "rep": "pixels",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 0.48987450700042245,
+    "per_image_ms": 0.04898745070004225,
+    "repeats_s": [
+      0.48987450700042245
+    ],
+    "includes_preprocessing": true,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": -1,
+    "label": "end-to-end from raw images"
+  },
+  {
+    "model": "svm",
+    "rep": "pixels",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 148.04294920900065,
+    "per_image_ms": 14.804294920900066,
+    "repeats_s": [
+      148.04294920900065
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": null,
+    "label": "predict only (precomputed features)"
+  },
+  {
+    "model": "svm",
+    "rep": "pixels",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 145.6005727419997,
+    "per_image_ms": 14.560057274199972,
+    "repeats_s": [
+      145.6005727419997
+    ],
+    "includes_preprocessing": true,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": null,
+    "label": "end-to-end from raw images"
+  },
+  {
+    "model": "logreg",
+    "rep": "hog",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 0.5675510420005594,
+    "per_image_ms": 0.05675510420005594,
+    "repeats_s": [
+      0.5675510420005594
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": null,
+    "label": "predict only (precomputed features)"
+  },
+  {
+    "model": "logreg",
+    "rep": "hog",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 33.02105188200039,
+    "per_image_ms": 3.302105188200039,
+    "repeats_s": [
+      33.02105188200039
+    ],
+    "includes_preprocessing": true,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": null,
+    "label": "end-to-end from raw images"
+  },
+  {
+    "model": "knn",
+    "rep": "hog",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 151.3722812549986,
+    "per_image_ms": 15.13722812549986,
+    "repeats_s": [
+      151.3722812549986
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": -1,
+    "label": "predict only (precomputed features)"
+  },
+  {
+    "model": "knn",
+    "rep": "hog",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 184.8246964049995,
+    "per_image_ms": 18.48246964049995,
+    "repeats_s": [
+      184.8246964049995
+    ],
+    "includes_preprocessing": true,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": -1,
+    "label": "end-to-end from raw images"
+  },
+  {
+    "model": "rf",
+    "rep": "hog",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 0.8283938770000532,
+    "per_image_ms": 0.08283938770000532,
+    "repeats_s": [
+      0.8283938770000532
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": -1,
+    "label": "predict only (precomputed features)"
+  },
+  {
+    "model": "rf",
+    "rep": "hog",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 33.29036891099895,
+    "per_image_ms": 3.329036891099895,
+    "repeats_s": [
+      33.29036891099895
+    ],
+    "includes_preprocessing": true,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": -1,
+    "label": "end-to-end from raw images"
+  },
+  {
+    "model": "svm",
+    "rep": "hog",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 484.26657569099916,
+    "per_image_ms": 48.426657569099916,
+    "repeats_s": [
+      484.26657569099916
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": null,
+    "label": "predict only (precomputed features)"
+  },
+  {
+    "model": "svm",
+    "rep": "hog",
+    "device": "cpu",
+    "batch_size": 10000,
+    "n_images": 10000,
+    "total_s_median": 518.999203368001,
+    "per_image_ms": 51.89992033680009,
+    "repeats_s": [
+      518.999203368001
+    ],
+    "includes_preprocessing": true,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "n_jobs": null,
+    "label": "end-to-end from raw images"
+  },
+  {
+    "model": "cnn",
+    "rep": "tensor",
+    "label": "cnn forward only",
+    "device": "cpu",
+    "batch_size": 256,
+    "n_images": 10000,
+    "total_s_median": 4.401525310000579,
+    "per_image_ms": 0.4401525310000579,
+    "repeats_s": [
+      4.401525310000579
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "device_name": "cpu"
+  },
+  {
+    "model": "cnn",
+    "rep": "tensor",
+    "label": "cnn forward only",
+    "device": "cuda",
+    "batch_size": 256,
+    "n_images": 10000,
+    "total_s_median": 0.11624715499965532,
+    "per_image_ms": 0.011624715499965532,
+    "repeats_s": [
+      0.11624715499965532
+    ],
+    "includes_preprocessing": false,
+    "torch_threads": 1,
+    "os_cpu_count": 2,
+    "device_name": "Tesla T4"
+  }
+]

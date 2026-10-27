@@ -37,11 +37,11 @@ accuracy are computed in evaluation mode (dropout off). Training stops when the 
 procedure. Training loss and accuracy in Fig.~\ref{fig:curves} are running averages over the mini-batches of
 each epoch with dropout active, so they are pessimistic compared with an evaluation-mode pass. The learning rate,
 batch size and dropout were not tuned. All results are from a single run with seed 42; run-to-run variation is not
-measured. The best epoch, training time and device are \TBD{} (filled from the notebook output).
+measured. The recorded run lasted 29 epochs and restored the best checkpoint from epoch 24 (validation accuracy 0.9352, validation loss 0.1783). Training took 49.01 seconds on a Tesla T4 GPU. The final test accuracy was 0.9274 and macro-F1 was 0.9269.
 
 \begin{figure}[t]
 \centering
-\figfile{cnn_learning_curves.png}{TBD: CNN learning curves}
+\figfile{cnn_learning_curves.png}{CNN learning curves}
 \caption{CNN training and validation learning curves; the dashed line marks the epoch whose weights were kept.}
 \label{fig:curves}
 \end{figure}

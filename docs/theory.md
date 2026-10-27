@@ -1,7 +1,7 @@
 # Theory: classical and learned classifiers for Fashion-MNIST
 
 Dataset: Fashion-MNIST (Xiao et al., 2017), 28x28 grayscale, 10 classes, official 60,000 train / 10,000 test.
-Numerical results in this document are TBD until measured.
+Numerical test results are reported in README.md and report/results_table.tex. This document focuses on theory; do not treat historical planning notes as final measurements.
 
 ## 1. Supervised multiclass classification
 We observe pairs $(\mathbf{x}_i, y_i)$ with $\mathbf{x}_i\in\mathbb{R}^d$ (784 pixel values or 1,296 HOG values) and $y_i\in\{0,\dots,9\}$. A classifier is a function $f:\mathbb{R}^d\to\{0,\dots,9\}$ chosen to make few mistakes on unseen images. Training minimises a loss on the training images; what we care about is the error on new images drawn from the same distribution (generalisation).

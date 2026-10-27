@@ -5,8 +5,6 @@
 \usepackage{cite}
 \graphicspath{{../}{./}} % figures live in ../figures/ (or ./figures/ on Overleaf)
 
-% Every measured value is a placeholder until it is filled from results/*.csv and results/*.json.
-\newcommand{\TBD}{\textbf{TBD}}
 % Stand-in for a figure that a teammate has not delivered yet (replace with \includegraphics).
 \newcommand{\figplaceholder}[1]{\fbox{\parbox[c][2.2cm][c]{0.85\columnwidth}{\centering #1}}}
 
@@ -19,14 +17,13 @@
 
 \title{Inventory Image Tagging via Handcrafted Features\\and a Small CNN}
 
-% Names as provided so far (first names only). Full names, affiliations and emails: TBD, fill in.
 \author{\IEEEauthorblockN{Manas \and Akhil \and Anant \and Tanish \and Rohan \and Puneet}
-\IEEEauthorblockA{Affiliation: \TBD \\ Email: \TBD}}
+\IEEEauthorblockA{Student project team}}
 
 \maketitle
 
 \begin{abstract}
-\TBD{} (written last, only from measured results in the results files.)
+We compare eight classical configurations—logistic regression, $k$-NN, random forest and RBF-SVM on flattened pixels and HOG—with a small convolutional neural network on Fashion-MNIST. The CNN achieved the highest held-out performance (accuracy 0.9274; macro-F1 0.9269), followed by the pixel RBF-SVM (0.8953; 0.8951). The HOG parameter study selected 6,084-dimensional features using validation data only. The official test set was evaluated once after model selection. The comparison has important limitations: the HOG SVM used a runtime-gated subset of 11,770 training images, the pixel logistic-regression fit emitted a convergence warning at 500 iterations, and the single-pass inference timings are preliminary.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -102,91 +99,54 @@ Bonferroni correction for the eight comparisons. This test also ignores training
 \paragraph{Inference cost.}
 Timing uses the same 10{,}000 test images in a fixed order, and excludes model loading, training and plotting. For the
 classical models we report ``predict only'' (precomputed features) and ``end-to-end'' (feature extraction from the raw
-images, then prediction) separately, as the median of three repeats after an untimed warm-up call. For the CNN the inputs
-are pre-normalised tensors, batch size 256, with three warm-up batches and the median of five repeats; the CPU is
-mandatory and a GPU is used if available. The notebook records the library versions and the hardware it ran on
+images, then prediction) separately, as one timed pass after an untimed warm-up call in the saved run. These single-repeat values are preliminary, not stable latency estimates. For the CNN the inputs
+are pre-normalised tensors, batch size 256, with three warm-up batches; the recorded table contains a single timing per device. CNN tensor timing excludes image preprocessing and is not directly comparable to classical end-to-end timing. The notebook records the library versions and the hardware it ran on
 (\texttt{results/environment.json}); implementations are scikit-learn~\cite{pedregosa2011scikit},
 PyTorch~\cite{paszke2019pytorch} and scikit-image~\cite{vanderwalt2014scikit}.
 
 \section{Results and Comparative Analysis}
 \label{sec:results}
-% Owner: Rohan. Fill every cell from results/*.csv and results/*.json; never retype numbers by hand.
-\IfFileExists{results_table.tex}{\input{results_table}}{%
-\begin{table}[t]
-\centering
-\caption{Test results for the nine models (measured once at the test gate).}
-\label{tab:results}
-\begin{tabular}{llrr}
-\toprule
-Model & Representation & Accuracy & Macro-F1 \\
-\midrule
-Logistic regression & pixels & \TBD & \TBD \\
-$k$-NN & pixels & \TBD & \TBD \\
-Random forest & pixels & \TBD & \TBD \\
-RBF-SVM & pixels & \TBD & \TBD \\
-Logistic regression & HOG & \TBD & \TBD \\
-$k$-NN & HOG & \TBD & \TBD \\
-Random forest & HOG & \TBD & \TBD \\
-RBF-SVM & HOG & \TBD & \TBD \\
-Small CNN & learned & \TBD & \TBD \\
-\bottomrule
-\end{tabular}
-\end{table}
+\input{results_table}
 
-}
-
-\IfFileExists{inference_table.tex}{\input{inference_table}}{%
-\begin{table}[t]
-\centering
-\caption{Inference time per image and parameter counts. \TBD}
-\label{tab:inference}
-\begin{tabular}{lrr}
-\toprule
-Model & ms/img (CPU) & Parameters \\
-\midrule
-\TBD & \TBD & \TBD \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-}
+\input{inference_table}
 
 \begin{figure}[t]
 \centering
-\figfile{model_comparison.png}{TBD: model comparison plot}
+\figfile{model_comparison.png}{Model comparison plot}
 \caption{Accuracy and macro-F1 of the nine models on the test set with 95\% bootstrap confidence intervals.}
 \label{fig:comparison}
 \end{figure}
 
 \section{Confusion Matrices and Error Analysis}
 \label{sec:errors}
-% Owner: Rohan (LaTeX-ready section to be merged).
-\TBD
+The CNN made 726 errors out of 10,000 test images (error rate 7.26%), fewer than every classical configuration. The most frequent CNN confusion was Shirt predicted as T-shirt/top (99 images, 9.9\% of true Shirts), followed by T-shirt/top predicted as Shirt (65, 6.5\%), Shirt predicted as Coat (62, 6.2\%), and Shirt predicted as Pullover (60, 6.0\%). These errors show that visually similar upper-body garments remain difficult at $28\times28$ resolution. The CNN made 321 fewer errors than the pixel RBF-SVM, which made 1,047 errors. McNemar tests comparing the CNN with each classical model were significant after Bonferroni correction (all adjusted $p$-values were below $2.0\times10^{-28}$). This indicates paired prediction differences on this test set, not variation across training seeds.
 
 \begin{figure}[t]
 \centering
-\figfile{cm_cnn.png}{TBD: confusion matrix}
+\figfile{cm_cnn.png}{CNN confusion matrix}
 \caption{Row-normalised confusion matrix of the CNN on the test set (rows: true class).}
 \label{fig:confusion}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\figfile{per_class_recall.png}{TBD: per-class recall heatmap}
+\figfile{per_class_recall.png}{Per-class recall heatmap}
 \caption{Per-class recall of the nine models on the test set.}
 \label{fig:recall}
 \end{figure}
 
 \section{Discussion, Limitations and Future Improvements}
 \label{sec:discussion}
-\TBD{} (after results.)
+The CNN outperformed all eight classical configurations on the held-out test set, reaching 92.74\% accuracy and 0.9269 macro-F1. The strongest classical result was the pixel RBF-SVM at 89.53\% accuracy and 0.8951 macro-F1. The CNN also had the lowest observed error count. The paired McNemar comparisons were significant after correcting for eight comparisons. Inference timings suggest a trade-off: the CNN's recorded GPU tensor latency was 0.0116 ms/image, but that excludes preprocessing; classical end-to-end timings include feature extraction and should not be compared to that figure directly.
+
+Several limitations qualify these findings. The evaluation covers one benchmark dataset, one split and one random seed; it does not establish performance on real inventory photographs or quantify training-seed variability. The CNN hyperparameters were not tuned, while the classical models used small grids. The pixel logistic-regression fit reached the 500-iteration cap with a convergence warning. The HOG RBF-SVM used only 11,770 of 54,000 training images because its estimated full fit exceeded the 30-minute runtime gate, so its score is not directly comparable to full-data fits. Inference timings were recorded as single timed passes after warm-up and should be repeated for robust latency estimates. Future work should validate on real inventory images, repeat training across seeds, expand hyperparameter searches within a documented budget, investigate logistic-regression convergence, and benchmark all models with repeated runs under matched preprocessing and hardware conditions.
 
 \section{Conclusion}
 \label{sec:conclusion}
-\TBD{} (after results.)
+For this Fashion-MNIST benchmark, the small CNN was the strongest evaluated model, with 0.9274 test accuracy and 0.9269 macro-F1. Among classical models, the pixel RBF-SVM performed best (0.8953 accuracy, 0.8951 macro-F1). The selected HOG representation improved validation macro-F1 over the original HOG baseline, but the runtime-gated HOG SVM fit and other protocol limitations should be considered when interpreting the comparison. The results support the CNN for this benchmark, not yet for production inventory tagging without further real-world validation.
 
 \section*{Acknowledgment}
-\TBD
+The repository snapshot did not specify external funding or additional acknowledgments.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

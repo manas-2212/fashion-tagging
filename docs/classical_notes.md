@@ -1,7 +1,7 @@
 # Classical models: design notes (Tanish)
 
 Fashion-MNIST, 54,000 train / 6,000 validation (seed 42), 10,000 test used only in the test gate.
-Selection rule: highest validation macro-F1, validation accuracy breaks ties. All results are TBD until measured.
+Selection rule: highest validation macro-F1, validation accuracy breaks ties. Final test results are recorded in the completed notebook and README; the earlier dry-run/runtime-probe notes below are historical and must not be confused with the final run.
 
 ## Hyperparameters and scaling (two sentences each)
 
@@ -25,7 +25,7 @@ When k-NN predicts a training point, that point is in its own neighbour set. Wit
 Train accuracy uses a stratified subsample of n_eval=5,000 images of the data the pipeline was fitted on; validation accuracy uses all 6,000 validation images. gap = train_acc - val_acc.
 
 ## Runtime gate
-Before every final fit, estimate_fit_seconds probes on 5,000 images and extrapolates (SVM quadratic, others linear; the SVM extrapolation is an assumption and probably optimistic). If the estimate exceeds MAX_FIT_MINUTES*60, fit on a stratified subset (e.g. 20,000) and record it. Every fit prints "n_train_used = X of 54000". Runtime plan table: TBD (needs real data).
+Before every final fit, estimate_fit_seconds probes on 5,000 images and extrapolates (SVM quadratic, others linear; the SVM extrapolation is an assumption and probably optimistic). If the estimate exceeds MAX_FIT_MINUTES*60, fit on a stratified subset (e.g. 20,000) and record it. Every fit prints "n_train_used = X of 54000". The historical runtime-probe table below is not the final run; final fit times and sample counts are summarised in the README and report.
 
 ---
 # HANDOFFS
@@ -73,7 +73,7 @@ Hyperparameters were tuned on a stratified 10{,}000-image subset (see limitation
 - Logistic regression: linear, softmax probabilities; k-NN: vote of nearest images; Random forest: many decision trees averaged; RBF-SVM: curved boundary with a margin
 - Chosen on validation macro-F1; test set touched once
 - SVM tuned on a 10,000-image subset (disclosed limitation)
-- Results: TBD
+- Final held-out results: pixel RBF-SVM was the strongest classical model (accuracy 0.8953, macro-F1 0.8951); CNN reached 0.9274 accuracy and 0.9269 macro-F1. Final fit times and the HOG-SVM runtime-gated subset are in README.md and report/results_table.tex.
 
 ## Viva Q&A (for Rohan)
 1. **Why must the validation set not be used for training the final model here?** Our protocol is to select on validation and train the final models on the 54k train split only. If validation images were also trained on, the validation score would no longer be an honest estimate and selection would be biased toward models that memorised them.
@@ -87,8 +87,8 @@ Hyperparameters were tuned on a stratified 10{,}000-image subset (see limitation
 
 ---
 ## Runtime plan (probe estimates, 5,000-image stratified probe, first grid value per model)
-Source: results/runtime_probe_tanish.txt. Estimates only; actual fit times TBD. Limit = MAX_FIT_MINUTES*60 = 1800 s.
-Machine details: TBD (fill in own chip/RAM).
+Source: results/runtime_probe_tanish.txt. Estimates only; actual final-run fit times are summarised in README.md and report/results_table.tex. Limit = MAX_FIT_MINUTES*60 = 1800 s.
+The final run used a Colab Tesla T4 for CNN training; the notebook's saved benchmark metadata should be restored from the original run before recording the complete CPU/RAM environment.
 
 | Model | Representation | Estimated fit (s) | kNN predict val / test (s) | Decision |
 |---|---|---|---|---|
@@ -106,7 +106,7 @@ Caveats: SVM estimates assume quadratic scaling (probably optimistic). Other gri
 ---
 ## Dry run (Tanish): official 54,000/6,000 split, validation only, test data not used
 Source: results/tanish_dryrun_output.txt and results/tanish_dryrun.csv (local, not committed). This is NOT the official run; compare with Puneet's results before reporting.
-All 8 final fits used n_train_used = 54000 of 54000 (no subset). Machine details: TBD.
+Historical dry-run statement: all 8 fits used 54,000 images in that separate run. In the final run, HOG RBF-SVM used 11,770 images due to the runtime gate; do not reuse this historical statement as the final result.
 
 ### Estimated vs actual fit seconds (same hyperparameters only)
 | Pair | Params | Estimated (s) | Actual on 54,000 (s) | Actual / estimate |
@@ -116,8 +116,8 @@ All 8 final fits used n_train_used = 54000 of 54000 (no subset). Machine details
 | rf pixels | min_samples_leaf=1 | 7.4 | 10.9 | 1.5 |
 | rf hog | min_samples_leaf=1 | 10.7 | 19.4 (tuning fit, same params) | 1.8 |
 
-SVM: the estimate was for C=1 (149.8 s pixels, 218.5 s HOG) but the final fits used C=10 (179.0 s, 211.9 s), so the comparison is not like-for-like; SVM C=1 on 54,000 was never fitted. k-NN fit is about 0 s; k-NN predict time on val/test was not measured separately: TBD.
-Linear extrapolation underestimated LogReg and RF fit time by about 1.5-1.8x here; every fit stayed far below the 1800 s limit.
+SVM: the estimate was for C=1 (149.8 s pixels, 218.5 s HOG) but the final fits used C=10 (179.0 s, 211.9 s), so the comparison is not like-for-like; SVM C=1 on 54,000 was never fitted. k-NN fit is about 0 s; final k-NN inference timing is recorded in the completed notebook output and README; the saved benchmark used one timed pass after warm-up.
+Linear extrapolation underestimated LogReg and RF fit time by about 1.5-1.8x here; this historical dry run is not the final experiment; in the final run, HOG RBF-SVM was runtime-gated because its estimated full fit exceeded 1800 s.
 
 ### Selection notes
 - The selected value is at the edge of the grid for 6 of 8 pairs (LogReg C=0.1 lowest, SVM C=10 highest, RF leaf=1 on pixels lowest, leaf=3 on HOG highest); only k-NN (k=7) is interior. The optimum may lie outside the grid; grids were not expanded (rule: no expansion without a runtime estimate and team agreement).

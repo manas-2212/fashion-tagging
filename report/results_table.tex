@@ -1,0 +1,21 @@
+\begin{table*}[t]
+\centering
+\caption{Held-out test performance. Parentheses show 95\% percentile bootstrap confidence intervals from 1,000 resamples. The official test gate was run once.}
+\label{tab:results}
+\small
+\begin{tabular}{llrcc}
+\toprule
+Model & Representation & $n_{\mathrm{train}}$ & Accuracy (95\% CI) & Macro-F1 (95\% CI) \\
+\midrule
+Logistic regression & pixels & 54,000 & 0.8411 (0.8338--0.8482) & 0.8403 (0.8336--0.8474) \\
+k-NN & pixels & 54,000 & 0.8500 (0.8434--0.8567) & 0.8493 (0.8430--0.8559) \\
+Random forest & pixels & 54,000 & 0.8756 (0.8693--0.8818) & 0.8741 (0.8682--0.8800) \\
+RBF-SVM & pixels & 54,000 & 0.8953 (0.8887--0.9014) & 0.8951 (0.8889--0.9008) \\
+Logistic regression & HOG & 54,000 & 0.8698 (0.8632--0.8766) & 0.8702 (0.8637--0.8764) \\
+k-NN & HOG & 54,000 & 0.8653 (0.8583--0.8718) & 0.8621 (0.8555--0.8682) \\
+Random forest & HOG & 54,000 & 0.8636 (0.8571--0.8703) & 0.8618 (0.8554--0.8682) \\
+RBF-SVM & HOG & 11,770 & 0.8817 (0.8753--0.8879) & 0.8816 (0.8755--0.8877) \\
+Small CNN & learned & 54,000 & 0.9274 (0.9219--0.9327) & 0.9269 (0.9214--0.9321) \\
+\bottomrule
+\end{tabular}
+\end{table*}

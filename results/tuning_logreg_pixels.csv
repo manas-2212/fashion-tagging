@@ -1,0 +1,3 @@
+model,params,val_accuracy,val_macro_f1,fit_seconds,n_train_used
+logreg,{'C': 0.1},0.86,0.8596069994566825,128.93337432400006,54000
+logreg,{'C': 1.0},0.8555,0.8548585234943271,128.71226577899995,54000

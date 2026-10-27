@@ -1,0 +1,3 @@
+model,params,val_accuracy,val_macro_f1,fit_seconds,n_train_used
+rf,{'min_samples_leaf': 1},0.8698333333333333,0.8686626409294534,348.528102496,54000
+rf,{'min_samples_leaf': 3},0.8656666666666667,0.8639466638301181,308.00233788700007,54000

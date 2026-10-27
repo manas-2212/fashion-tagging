@@ -1,0 +1,26 @@
+{
+  "logreg_pixels": {
+    "C": 0.1
+  },
+  "knn_pixels": {
+    "n_neighbors": 7
+  },
+  "rf_pixels": {
+    "min_samples_leaf": 1
+  },
+  "svm_pixels": {
+    "C": 10
+  },
+  "logreg_hog": {
+    "C": 0.1
+  },
+  "knn_hog": {
+    "n_neighbors": 5
+  },
+  "rf_hog": {
+    "min_samples_leaf": 1
+  },
+  "svm_hog": {
+    "C": 10
+  }
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "model": "logreg",
+    "rep": "pixels",
+    "params": {
+      "C": 0.1
+    },
+    "fit_seconds": 131.484911001,
+    "n_train_used": 54000,
+    "n_train_available": 54000,
+    "gated": false,
+    "estimated_fit_seconds": 176.656958262001
+  },
+  {
+    "model": "knn",
+    "rep": "pixels",
+    "params": {
+      "n_neighbors": 7
+    },
+    "fit_seconds": 0.016636402000585804,
+    "n_train_used": 54000,
+    "n_train_available": 54000,
+    "gated": false,
+    "estimated_fit_seconds": 0.04297240079940821
+  },
+  {
+    "model": "rf",
+    "rep": "pixels",
+    "params": {
+      "min_samples_leaf": 1
+    },
+    "fit_seconds": 125.08697868199943,
+    "n_train_used": 54000,
+    "n_train_available": 54000,
+    "gated": false,
+    "estimated_fit_seconds": 103.76985367799317
+  },
+  {
+    "model": "svm",
+    "rep": "pixels",
+    "params": {
+      "C": 10
+    },
+    "fit_seconds": 267.66174866599977,
+    "n_train_used": 54000,
+    "n_train_available": 54000,
+    "gated": false,
+    "estimated_fit_seconds": 380.8900352664109
+  },
+  {
+    "model": "logreg",
+    "rep": "hog",
+    "params": {
+      "C": 0.1
+    },
+    "fit_seconds": 393.6141255319999,
+    "n_train_used": 54000,
+    "n_train_available": 54000,
+    "gated": false,
+    "estimated_fit_seconds": 82.34400927239403
+  },
+  {
+    "model": "knn",
+    "rep": "hog",
+    "params": {
+      "n_neighbors": 5
+    },
+    "fit_seconds": 0.11676369799988606,
+    "n_train_used": 54000,
+    "n_train_available": 54000,
+    "gated": false,
+    "estimated_fit_seconds": 0.28042034760073875
+  },
+  {
+    "model": "rf",
+    "rep": "hog",
+    "params": {
+      "min_samples_leaf": 1
+    },
+    "fit_seconds": 348.48490290000063,
+    "n_train_used": 54000,
+    "n_train_available": 54000,
+    "gated": false,
+    "estimated_fit_seconds": 211.49945043840344
+  },
+  {
+    "model": "svm",
+    "rep": "hog",
+    "params": {
+      "C": 10
+    },
+    "fit_seconds": 322.48032249599964,
+    "n_train_used": 11770,
+    "n_train_available": 54000,
+    "gated": true,
+    "estimated_fit_seconds": 8258.275066919057
+  }
+]

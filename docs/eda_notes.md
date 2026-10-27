@@ -1,6 +1,6 @@
 # EDA notes (Akhil)
 
-Every statement is labelled OBSERVATION (backed by a number or figure) or HYPOTHESIS (an explanation not tested here). TBD = not yet measured or checked.
+Every statement is labelled OBSERVATION (backed by a number or figure) or HYPOTHESIS (an explanation not tested here). Items not supported by the saved evidence are explicitly marked as unverified.
 
 ## 1. Dataset facts
 - OBSERVATION: official train (60,000) and test (10,000) images are 28x28 uint8 grayscale; pixel range 0-255; labels 0-9.
