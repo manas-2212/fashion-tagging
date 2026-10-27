@@ -9,8 +9,4 @@ venv/
 .DS_Store
 .pytest_cache/
 
-results/test_gate_done.flag
-results/cnn_best.pt
-
-results/test_gate_done.flag
 results/cnn_best.pt
