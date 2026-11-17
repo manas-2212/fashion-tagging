@@ -59,10 +59,10 @@ So every class has exactly 600 validation images and class-wise estimates are co
 They capture absolute grey level at each location (silhouette area, brightness). The models treat each pixel as an independent column, so permuting the columns identically for all images leaves logistic regression, k-NN, the RBF-SVM and the random forest essentially unchanged: they cannot use the fact that two pixels are neighbours.
 
 **Q17. Explain HOG in a few sentences.**
-Compute the gradient at each pixel, vote its direction (9 unsigned bins) weighted by magnitude into histograms per 4x4-pixel cell, normalise overlapping 2x2-cell blocks, and concatenate. It describes local edge directions and is less sensitive to local contrast, but it discards absolute grey level.
+Compute the gradient at each pixel, vote its direction (9 unsigned bins) weighted by magnitude into histograms per 2x2-pixel cell, normalise overlapping 2x2-cell blocks, and concatenate. It describes local edge directions and is less sensitive to local contrast, but it discards absolute grey level.
 
-**Q18. Where does 1,296 come from?**
-28/4 = 7 cells per axis, 7 - 2 + 1 = 6 blocks per axis, and each block has 2 x 2 x 9 = 36 numbers, so 6 x 6 x 36 = 1,296. We verified it against the library output.
+**Q18. Where does 6,084 come from?**
+28/2 = 14 cells per axis, 14 - 2 + 1 = 13 blocks per axis, and each block has 2 x 2 x 9 = 36 numbers, so 13 x 13 x 36 = 6,084. We verified it against the library output.
 
 **Q19. Why can HOG be computed on all splits without leakage?**
 It is a fixed function of each image; nothing is fitted. Only the StandardScaler is fitted, and it lives inside the pipeline and is fitted on training data.
@@ -94,7 +94,7 @@ We have an official fixed validation split and a runtime budget; cross-validatio
 It runs an internal cross-validation that multiplies training cost, so SVM confidence is NaN downstream.
 
 **Q28. How many parameters does logistic regression have?**
-10 x 784 + 10 = 7,850 on pixels and 10 x 1,296 + 10 = 12,970 on HOG. For the random forest we report total tree nodes and for the SVM the number of support vectors; these are not comparable to weights, and k-NN is non-parametric.
+10 x 784 + 10 = 7,850 on pixels and 10 x 6,084 + 10 = 60,850 on HOG. For the random forest we report total tree nodes and for the SVM the number of support vectors; these are not comparable to weights, and k-NN is non-parametric.
 
 ## E. CNN (Manas)
 

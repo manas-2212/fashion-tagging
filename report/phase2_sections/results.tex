@@ -1,0 +1,180 @@
+% Section owners: Rohan (test analysis, statistics, calibration), Tanish (ablations), Anant (hybrid),
+%                 Akhil (robustness), Manas (architecture and cost)
+\section{Results}
+\label{sec:p2results}
+\subsection{Roadmap: recipe versus architecture}
+Fig.~\ref{fig:p2roadmap} shows the four roadmap steps on validation data. Re-trained with three seeds, the Phase 1
+CNN reaches \ValPoneRecipeOne{} $\pm$ \ValPoneRecipeOneStd{} macro-F1. Giving the same network the Phase 2 recipe
+changes this by \RecipeOnPoneDelta{} percentage points (pp), a decrease in \RecipeOnPoneAllNegative{} seeds. Its
+training accuracy falls to \ValPoneRecipeTwoTrainAcc{} and its generalisation gap to \ValPoneRecipeTwoGap{}~pp: the
+small network has no over-fitting left to remove, and stronger regularisation only makes the training task harder.
+Under the same recipe, replacing the architecture adds \ArchGainSameRecipe{}~pp. The gain of Phase 2 therefore
+comes from the architecture, and the recipe pays off only once the model has the capacity to use it. Adding
+shortcuts to the seven-layer network changes macro-F1 by $\ShortcutGain$~pp, with seeds disagreeing on the sign.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{architecture_roadmap.png}
+\caption{Architecture roadmap on validation data (mean over three seeds, whiskers $\pm1$ standard deviation).}
+\label{fig:p2roadmap}
+\end{figure}
+
+\input{phase2_tables/rt_ablations}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.8\textwidth]{ablation_deltas.png}
+\caption{One-factor ablations: paired change in validation macro-F1 relative to the base model.}
+\label{fig:p2abl}
+\end{figure*}
+
+\subsection{Ablations}
+Table~\ref{tab:p2abl} and Fig.~\ref{fig:p2abl} give all configurations.
+
+\emph{Capacity.} Reducing the widths to 16/32/64 (\ParamsNarrow{} parameters) costs \DeltaNarrow{}~pp, the largest
+effect in the study. Doubling the depth gains \DeltaDeeper{}~pp in every seed and has the highest mean validation
+macro-F1 (\ValDeeper{} $\pm$ \ValDeeperStd); by the selection rule it is the final deep model.
+
+\emph{Batch normalisation.} Removing it costs \DeltaNoBN{}~pp and raises the standard deviation over seeds from
+\BaseStdPP{} to \NoBNStd{}~pp: the network is both less accurate and less stable at the fixed learning rate.
+
+\emph{Augmentation.} Without augmentation the network reaches \ValNoAugTrainAcc{} training accuracy, a gap of
+\ValNoAugGap{}~pp, and loses \DeltaNoAug{}~pp (Fig.~\ref{fig:p2gap}). Random erasing contributes
+\DeltaNoErase{}~pp when removed, consistently. Removing the horizontal flip changes nothing ($\DeltaNoFlip$~pp), as
+expected for near-symmetric garments.
+
+\emph{Other regularisers.} Removing label smoothing costs \DeltaNoLS{}~pp in every seed. Dropout 0.5 instead of 0.3
+costs \DeltaDropHalf{}~pp. Removing dropout ($\DeltaDropZero$~pp) or weight decay ($\DeltaNoWD$~pp) has no
+measurable effect: the seeds disagree on the sign.
+
+\emph{Optimisation.} A constant learning rate costs \DeltaConstLR{}~pp. SGD with Nesterov momentum is within
+noise of AdamW ($\DeltaSGD$~pp, inconsistent sign), so the result does not depend on the adaptive optimiser.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{generalisation_gap.png}
+\caption{Training accuracy (evaluation mode) and validation accuracy for selected configurations.}
+\label{fig:p2gap}
+\end{figure}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.85\textwidth]{learning_curves.png}
+\caption{Learning curves for seed 42. Training loss is higher than validation loss for the base model because it
+is measured with augmentation, dropout and label smoothing.}
+\label{fig:p2curves}
+\end{figure*}
+
+\subsection{Test results of the final deep model}
+Table~\ref{tab:p2test} reports the frozen models. The final deep model reaches \TestFinal{} $\pm$ \TestFinalStd{}
+accuracy; the re-trained Phase 1 CNN reaches \TestPone{} $\pm$ \TestPoneStd, a range that contains the single
+Phase 1 result of \PhaseOneCnnAcc. The difference is \TestGainFinalVsPone{}~pp, more than six times the larger
+of the two standard deviations. The mean number of errors falls from \ErrorsPoneMean{} to \ErrorsFinalMean{}
+(\ErrorReduction\% fewer). For seed 42 the final model is right on \McFinalOnly{} images on which the Phase 1 CNN
+is wrong and wrong on \McPoneOnly{} on which it is right ($p<10^{-4}$, Table~\ref{tab:p2mcnemar}).
+
+The gain is concentrated where Phase 1 was weakest (Fig.~\ref{fig:p2recall}). Mean Shirt recall rises from
+\TestPoneShirt{} to \TestFinalShirt, and in-group confusion among the four upper-body classes falls from
+\TestPoneInGroup\% to \TestFinalInGroup\%. Shirt remains the hardest class; its most frequent error is still
+T-shirt/top (Fig.~\ref{fig:p2cm}).
+
+\input{phase2_tables/rt_test}
+\input{phase2_tables/rt_mcnemar}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.85\textwidth]{per_class_recall_phase2.png}
+\caption{Per-class recall on the test set (seed 42; Phase 1 CNN from the stored Phase 1 predictions).}
+\label{fig:p2recall}
+\end{figure*}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{cm_final_dl.png}
+\caption{Row-normalised test confusion matrix of the final deep model (seed 42).}
+\label{fig:p2cm}
+\end{figure}
+
+\subsection{Hybrid models}
+\emph{Complementarity exists.} On the test set (seed 42) the handcrafted model H0 is correct on \CompHogFixes{}
+of the \CompCnnErrors{} images that the deep model gets wrong (\CompHogFixShare\%). A selector that always
+picked the correct model would reach \CompOracle. This is an upper bound that uses the true label.
+
+\emph{The fusion gain is small and not significant.} H2 scores \TestHtwo{} $\pm$ \TestHtwoStd{}
+(Table~\ref{tab:p2hybrid}). It is above the deep model in all three seeds, by \HtwoGain{}~pp on average
+(\HtwoGainMin{} to \HtwoGainMax), and by \HtwoGainVal{}~pp on validation. This is the same size as the
+seed-to-seed standard deviation. McNemar's test for seed 42 gives $p=\PHtwoVsFinal$ before correction: H2 fixes
+\McHtwoOnly{} errors of the deep model and introduces \McFinalOnlyVsHtwo. The control H1 gains \HoneGain{}~pp, and
+H2 against H1 gives $p=\PHtwoVsHone$. We conclude that the direction is consistent but the data do not show that
+HOG adds to the embedding: most of the complementary images cannot be identified without the label.
+
+\emph{The cascade keeps the accuracy at a fraction of the cost.} With $\tau=\Tau$ chosen on validation, H3
+sends \RoutedTest\% of the test images to H2 and scores \TestHthree{} $\pm$ \TestHthreeStd, equal to H2. HOG
+extraction and the SVM are needed for about one image in seventeen (Fig.~\ref{fig:p2cascade}).
+
+\emph{A stronger classical baseline.} H0 reaches \TestHzero{} on the test set, above the \PhaseOneHogSvmAcc{} of
+the Phase 1 HOG SVM, which had to be fitted on 11{,}770 images because of its 6{,}084 input dimensions. Reducing
+HOG to 128 principal components (\PcaVar\% of the variance) made a fit on all 54{,}000 images feasible.
+
+\input{phase2_tables/rt_hybrid}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\columnwidth]{cascade_threshold.png}
+\caption{Cascade threshold on validation data (seed 42): accuracy and share of images routed to H2.}
+\label{fig:p2cascade}
+\end{figure}
+
+\subsection{Calibration}
+The final model is under-confident: its mean confidence on the test set is \ConfFinalTest{} at \TestFinal{}
+accuracy, and its expected calibration error is \EceFinalTest{} against \EcePoneTest{} for the Phase 1 CNN
+(Table~\ref{tab:p2cal}). The ablation isolates the cause. On validation, the base model has an error of
+\EceBaseVal{} with label smoothing and \EceNoLSVal{} without it (Fig.~\ref{fig:p2rel}). Label smoothing therefore
+buys \GainLS{}~pp of macro-F1 at the price of calibration. The model without smoothing was
+already well calibrated, so smoothing over-corrected. Confidence still ranks predictions, which is all the cascade
+needs, but the probabilities should be rescaled before they are shown to a user.
+
+\input{phase2_tables/rt_calibration}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\columnwidth]{reliability.png}
+\caption{Reliability diagram on validation data (seed 42). Points above the diagonal are under-confident.}
+\label{fig:p2rel}
+\end{figure}
+
+\subsection{Robustness}
+Table~\ref{tab:p2rob} and Fig.~\ref{fig:p2rob} show accuracy under corruption. The result is mixed.
+
+\emph{Geometric changes.} After a 3-pixel shift the final model keeps \RobShiftF{} accuracy; the Phase 1 CNN
+falls to \RobShiftP{} and H0 to \RobShiftZ. Under the largest occlusion the final model keeps \RobOcclF{}
+against \RobOcclP. Random crops and random erasing train for exactly these changes.
+
+\emph{Noise.} The final model is far more fragile than the Phase 1 CNN: \RobNoiseMidF{} against \RobNoiseMidP{} at
+a noise standard deviation of 0.10, and \RobNoiseF{} against \RobNoiseP{} at 0.20. Nothing in training exposes
+the network to pixel noise, and the deeper normalised network amplifies it; we did not test the cause.
+
+\emph{Photometric changes.} Added brightness of 0.3 reduces the final model to \RobBrightF{} and the Phase 1 CNN to
+\RobBrightP, while H0 stays at \RobBrightZ: gradients do not change when a constant is added. H0 is also the most
+stable under reduced contrast (\RobContrastZ{} against \RobContrastF).
+
+\emph{The fusion does not inherit this robustness.} H2 follows the deep model under every corruption
+(\RobBrightH{} under brightness). The handcrafted features are valuable under photometric shift, but a fused
+classifier dominated by the embedding does not use them there.
+
+\input{phase2_tables/rt_robustness}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{robustness.png}
+\caption{Accuracy under five corruptions on a stratified subset of 2{,}000 test images (seed 42).}
+\label{fig:p2rob}
+\end{figure*}
+
+\subsection{Cost}
+The final model has \ParamsDeeper{} parameters against \ParamsPone{} and needs \GpuMsFinal{}~ms per image on the
+GPU against \GpuMsPone{}~ms, \GpuSlowdown{} times slower (Table~\ref{tab:p2inf}); on the CPU it needs
+\CpuMsFinal{}~ms against \CpuMsPone{}~ms. H2 needs \MsHtwo{}~ms per image end-to-end, dominated by HOG extraction.
+The cascade pays this only for the routed \RoutedTest\% of images.
+
+\input{phase2_tables/rt_inference}
