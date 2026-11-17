@@ -1,0 +1,38 @@
+% Section owner: Puneet (deep learning literature review)
+\section{Related Work}
+\label{sec:p2related}
+\textbf{Convolutional architectures.} LeCun et al.~\cite{lecun1998gradient} established convolution with weight
+sharing followed by pooling for image recognition. Simonyan and Zisserman~\cite{simonyan2015very} showed that
+stacks of small $3\times3$ filters reach a large receptive field with fewer parameters and more non-linearities
+than single large filters. Lin et al.~\cite{lin2014network} replaced the dense layers at the end of a network by
+global average pooling, which removes most parameters of the classifier. He et al.~\cite{he2016deep} introduced
+residual blocks, in which a layer learns a correction to its input, so that very deep networks remain trainable.
+Our network family combines these three ideas at a small scale.
+
+\textbf{Normalisation and optimisation.} Batch normalisation~\cite{ioffe2015batch} standardises the inputs of each
+layer over a mini-batch; Santurkar et al.~\cite{santurkar2018does} attribute its benefit to a smoother optimisation
+landscape. Adam~\cite{kingma2015adam} adapts the step size of each weight. Loshchilov and
+Hutter~\cite{loshchilov2019decoupled} showed that L2 regularisation and weight decay are not equivalent for
+adaptive optimisers and proposed decoupled weight decay (AdamW); the same authors introduced cosine learning-rate
+schedules~\cite{loshchilov2017sgdr}.
+
+\textbf{Regularisation.} Dropout~\cite{srivastava2014dropout} removes random units during training. Label
+smoothing~\cite{szegedy2016rethinking} replaces one-hot targets by slightly softened targets; M\"uller et
+al.~\cite{muller2019when} show that it changes the geometry of the penultimate layer and the confidence of the
+predictions. Random erasing~\cite{zhong2020random} occludes a random rectangle of each training image.
+
+\textbf{Calibration and robustness.} Guo et al.~\cite{guo2017calibration} found that modern networks are often
+over-confident and popularised the expected calibration error. Hendrycks and
+Dietterich~\cite{hendrycks2019benchmarking} benchmarked accuracy under common corruptions; we apply the same idea
+with five simple corruptions.
+
+\textbf{Handcrafted features and hybrids.} HOG~\cite{dalal2005histograms} describes local edge orientation with
+block normalisation. Razavian et al.~\cite{razavian2014cnn} showed that activations of a trained CNN are strong
+generic features for a linear SVM, and Tang~\cite{tang2013deep} trained networks with an SVM objective in place of
+the softmax layer. Cascades that let a cheap model handle easy inputs go back to Viola and
+Jones~\cite{viola2001rapid}. We test whether a fixed descriptor adds to a learned one on the same images.
+
+\textbf{Dataset and tests.} Fashion-MNIST~\cite{xiao2017fashion} has 60{,}000 training and 10{,}000 test images
+of $28\times28$ pixels in ten balanced classes. Paired comparison of classifiers on one test set follows
+McNemar~\cite{mcnemar1947note} as recommended by Dietterich~\cite{dietterich1998approximate}; confidence intervals
+use the bootstrap~\cite{efron1979bootstrap}.

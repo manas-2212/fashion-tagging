@@ -14,7 +14,7 @@ PIXEL_DIM = 784
 
 HOG_PARAMS = dict(orientations=9, pixels_per_cell=(2, 2),
                   cells_per_block=(2, 2), block_norm="L2-Hys")
-HOG_DIM = 6084  # 13x13 cells -> 12x12 blocks * 4 cells * 9 bins
+HOG_DIM = 6084  # 14x14 cells -> 13x13 blocks * 4 cells * 9 bins
 
 SVM_TUNE_N = 10_000
 MAX_FIT_MINUTES = 30

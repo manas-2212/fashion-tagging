@@ -1,0 +1,57 @@
+% Section owners: all members (answers and limitations); Puneet (assembly)
+\section{Discussion and Limitations}
+\label{sec:p2discussion}
+\textbf{Answers to the four questions.} (1)~The deeper residual network separates the confusable classes better:
+\TestGainFinalVsPone{}~pp accuracy, Shirt recall \TestPoneShirt{} to \TestFinalShirt. The roadmap attributes the
+gain to the architecture; the stronger recipe alone made the Phase 1 CNN slightly worse. (2)~Width, batch
+normalisation, augmentation as a whole and the cosine schedule each account for about 0.7 to 1.1~pp; label
+smoothing and random erasing for 0.2 to 0.3~pp; the horizontal flip, dropout and weight decay have no measurable
+effect in this setting. (3)~Handcrafted and learned models do fail on different images, but feature-level fusion
+recovers little of this: \HtwoGain{}~pp, consistent in sign and not significant. The practical value of the hybrid
+work is the cascade, which matches the fusion accuracy while computing handcrafted features for \RoutedTest\% of
+the images, and the observation that HOG alone is the most robust model under brightness and contrast changes.
+(4)~The architecture gain is far outside both kinds of noise. It costs seven times the GPU inference time, worse
+calibration and lower robustness to noise.
+
+\textbf{Limitations.}
+\begin{enumerate}
+\item The test set was already used at the Phase 1 gate (Section~\ref{sec:p2protocol}).
+\item Three seeds give a spread, not a significance test; McNemar tests use one seed.
+\item The Phase 2 recipe was fixed in advance and not tuned. The ablations vary factors of the base model, not of
+the deeper model that was finally selected; in particular, the shortcut ablation at seven layers says nothing about
+thirteen.
+\item One-factor ablations do not measure interactions, for example between dropout and augmentation.
+\item Hybrid hyper-parameters were tuned on a 10{,}000-image subset where differences were within noise; the
+selected $\alpha$ and number of HOG components lie at the edge of the grid; the SVM is fitted on embeddings of
+images the CNN was trained on.
+\item The robustness study uses 2{,}000 images and synthetic corruptions. It is an indication, not evidence about
+photographs of real inventory.
+\item Timings come from one shared cloud runtime. The run started from an uploaded archive, so the freeze file
+records a timestamp and a hash but no git commit.
+\item Fashion-MNIST contains ambiguous Shirt-group labels, which bounds the reachable accuracy.
+\end{enumerate}
+
+\textbf{Future work.} Temperature scaling on the validation set to restore calibration; noise and brightness
+augmentation, followed by a repeat of the robustness test; out-of-fold embeddings for the hybrid; routing by input
+statistics instead of confidence, so that images with unusual brightness reach the handcrafted model; and a test on
+photographs taken outside the benchmark.
+
+\section{Conclusion}
+\label{sec:p2conclusion}
+A thirteen-layer residual network with batch normalisation, global average pooling, augmentation and a cosine
+schedule reaches \TestFinal{} $\pm$ \TestFinalStd{} test accuracy on Fashion-MNIST, \TestGainFinalVsPone{}~pp above
+the Phase 1 CNN re-trained under the same protocol, with most of the gain in the upper-body classes. Controlled
+ablations with three seeds identify which components matter and show that the training recipe helps only a model
+with enough capacity. The handcrafted--learned fusion gives a small, consistent and statistically unsupported gain;
+a confidence-gated cascade delivers the same accuracy at a fraction of its cost. The better model is less
+calibrated and less robust to noise than its predecessor, which matters more for real inventory images than the
+benchmark accuracy does.
+
+\section*{Author Contributions}
+M.~Selukar: architecture family, training engine, pipeline integration, experiments on the GPU.
+A.~Singh: hybrid models, controls and cascade.
+A.~Sharma: augmentation pipeline and robustness study.
+T.~Rao: ablation design, regularisation analysis and model selection stage.
+R.~Kumar: multi-seed statistics, significance tests, calibration and error analysis.
+P.~Takhar: experiment configuration, run store, freeze and test gate, reporting and literature review.
+All authors wrote the sections on their components and reviewed the manuscript.

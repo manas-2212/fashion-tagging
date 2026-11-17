@@ -1,6 +1,7 @@
 # Inventory Image Tagging via Handcrafted Features and a Small CNN
 
-Phase 1 (machine-learning evaluation only) on Fashion-MNIST.
+Phase 1 (machine-learning evaluation) and Phase 2 (deep learning, ablations and a hybrid ML + DL model) on Fashion-MNIST.
+The Phase 1 sections below are unchanged; Phase 2 is described in the section "Phase 2" at the end of this file.
 
 ## Overview
 
@@ -132,3 +133,95 @@ Algorithms," arXiv:1708.07747, 2017. https://arxiv.org/abs/1708.07747
 
 [2] Y. LeCun, L. Bottou, Y. Bengio and P. Haffner, "Gradient-based learning applied to document recognition,"
 Proc. IEEE, vol. 86, no. 11, pp. 2278-2324, Nov. 1998. DOI 10.1109/5.726791
+
+---
+
+# Phase 2: deep learning, ablation studies and a hybrid model
+
+Phase 1 ended with a 3-block CNN at 0.9274 test accuracy, one training seed, no augmentation and no tuning.
+Phase 2 asks four questions and answers each with a controlled experiment:
+
+1. **Architecture.** Does a deeper network with batch normalisation, residual blocks and global average pooling
+   separate the confusable classes (T-shirt, Pullover, Coat, Shirt) better, at a similar parameter budget?
+2. **Regularisation and data.** Which of augmentation, dropout, weight decay, label smoothing and the learning-rate
+   schedule actually contribute? 13 one-factor ablations, 3 seeds each.
+3. **Hybrid.** Do handcrafted HOG features add information to the learned CNN embedding? A fusion SVM is compared
+   with two controls, and a confidence-gated cascade sends only uncertain images to the hybrid.
+4. **Validation.** Are the differences larger than seed-to-seed variation and test-set sampling noise?
+
+## Phase 2 layout
+
+    src/dl_config.py            Phase 2 constants: seeds, recipes, grids                     (Puneet)
+    src/dl_models.py            FashionNet family, parameter and receptive-field helpers     (Manas)
+    src/dl_train.py             training engine: AdamW/SGD, cosine schedule, early stopping  (Manas)
+    src/augment.py              batched crop / flip / random erasing                         (Akhil)
+    src/robustness.py           corruption stress test                                       (Akhil)
+    src/ablation.py             roadmap and one-factor ablation design                       (Tanish)
+    src/ablation_report.py      stage 2: multi-seed tables, figures, model selection         (Tanish)
+    src/hybrid.py               embeddings, HOG PCA, fusion SVM, cascade, complementarity    (Anant)
+    src/hybrid_stage.py         stage 3: tune and fit hybrids; test-time predictor           (Anant)
+    src/dl_evaluation.py        multi-seed statistics, calibration, figures                  (Rohan)
+    src/phase2_analysis.py      stage 6: test metrics, CIs, McNemar, robustness, cost        (Rohan)
+    src/phase2_experiments.py   run store (resume), freeze file, one-shot test gate          (Puneet)
+    src/phase2_reporting.py     CSV / Markdown / LaTeX tables                                (Puneet)
+    src/phase2_context.py       data, device and folders shared by all stages                (Manas)
+    src/phase2_pipeline.py      stages in protocol order                                     (Manas)
+    run_phase2.py               command-line entry point                                     (Manas)
+    notebook_phase2.ipynb       Colab notebook for the full study                            (Manas)
+    tests/test_<module>.py      one test file per Phase 2 module
+    docs/phase2/                runbook, design notes and viva questions per owner
+
+## How to run Phase 2
+
+    python -m pytest tests -q            # unit tests
+    python run_phase2.py --smoke         # every stage on tiny subsets, a few minutes
+    python run_phase2.py                 # full study (GPU recommended)
+
+On Google Colab open `notebook_phase2.ipynb` and follow `docs/phase2/PHASE2_RUNBOOK.md`.
+
+## Phase 2 protocol
+
+- Same 54,000 / 6,000 split as Phase 1 (hash-checked). Every configuration is trained with seeds 42, 43 and 44.
+- Selection of the final deep model, hybrid hyper-parameters and the cascade threshold use validation data only.
+- `results/phase2/selected_configs_phase2.json` is frozen before `run_phase2_test_gate` opens the test set once
+  for the frozen list of models. The test set had already been used once at the Phase 1 gate; this is disclosed.
+- Reported: mean +- standard deviation over seeds, bootstrap confidence intervals, Bonferroni-corrected McNemar
+  tests, per-class recall, calibration (ECE), robustness to corruptions, parameter counts and inference time.
+
+## Phase 2 results
+
+Full run on a Colab Tesla T4, 16 November 2026: 48 training runs, test gate opened once on all 10,000 test
+images. Tables: `results/phase2/`; figures: `figures/phase2/`; report: `report/Phase2Report.pdf`.
+
+| Model (test set, mean +- std over 3 seeds) | Accuracy | Macro-F1 | 95% CI (seed 42) | Shirt recall | In-group confusion |
+|---|---|---|---|---|---|
+| H0: PCA-HOG + SVM | 0.9048 +- 0.0000 | 0.9047 | [0.8990, 0.9102] | 0.708 | 15.3% |
+| Phase 1 CNN (re-trained) | 0.9252 +- 0.0034 | 0.9250 | [0.9231, 0.9332] | 0.757 | 12.2% |
+| Final deep model | 0.9488 +- 0.0015 | 0.9487 | [0.9445, 0.9532] | 0.834 | 8.5% |
+| H1: CNN embedding + SVM | 0.9495 +- 0.0009 | 0.9494 | [0.9454, 0.9540] | 0.833 | 8.4% |
+| H2: embedding + HOG fusion SVM | 0.9502 +- 0.0020 | 0.9501 | [0.9455, 0.9539] | 0.839 | 8.3% |
+| H3: confidence-gated cascade | 0.9502 +- 0.0021 | 0.9501 | [0.9455, 0.9539] | 0.839 | 8.3% |
+
+For reference, the single Phase 1 run of the small CNN scored 0.9274 and the Phase 1 pixel RBF-SVM 0.8953.
+
+Findings, as measured:
+
+1. **Architecture.** The final deep model (13 convolution layers, 696,042 parameters) is
+   +2.36 pp above the re-trained Phase 1 CNN and makes 32% fewer errors
+   (McNemar p < 0.0001). Shirt recall rises from 0.757 to 0.834.
+2. **Recipe vs architecture.** The Phase 2 training recipe alone made the Phase 1 CNN slightly worse
+   (-0.28 pp validation macro-F1); the new architecture under the same recipe adds +1.96 pp.
+3. **Ablations (validation, paired over seeds).** Narrow network -1.10 pp, no BatchNorm -0.70 pp,
+   no augmentation -0.72 pp, constant learning rate -0.68 pp, no label smoothing -0.29 pp,
+   no random erasing -0.16 pp. No measurable effect: horizontal flip, dropout, weight decay, residual
+   shortcuts at 7 layers, SGD instead of AdamW.
+4. **Hybrid.** The embedding + HOG fusion SVM is above the deep model in all three seeds by +0.15 pp on
+   average, which is not statistically significant (McNemar p = 0.20; fusion vs embedding-only SVM
+   p = 0.90). The confidence-gated cascade reaches the same accuracy while routing 5.7% of the
+   images to the hybrid.
+5. **Costs.** The final model is under-confident (ECE 0.067 vs 0.013, caused by label smoothing),
+   7.1x slower on the GPU, and far less robust to Gaussian noise than the Phase 1 CNN
+   (0.381 vs 0.855 accuracy at noise std 0.10). It is more robust to shifts and occlusion.
+
+Limitations are listed in `docs/phase2/PHASE2_RUNBOOK.md` and in the report (test set already used at the Phase 1
+gate; three seeds; untuned recipe; one-factor ablations around the 7-layer base).

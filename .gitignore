@@ -17,3 +17,10 @@ report/*.log
 report/*.bbl
 report/*.blg
 report/*.out
+
+# Phase 2: large or reproducible artefacts
+results/phase2/checkpoints/
+results/phase2/hybrid_models/
+results/phase2/val_probs/
+results/phase2_smoke/
+*.joblib
