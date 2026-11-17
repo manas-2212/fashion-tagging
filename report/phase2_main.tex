@@ -1,0 +1,56 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{url}
+% Figures are produced by the Phase 2 pipeline in figures/phase2/ (../ locally, ./ on Overleaf).
+\graphicspath{{../figures/phase2/}{figures/phase2/}}
+% Every number quoted in the text is a macro generated from the results files:
+%   python report/build_phase2_report_assets.py
+\input{phase2_tables/numbers}
+
+\begin{document}
+
+\title{Inventory Image Tagging via Handcrafted Features and a Small CNN\\
+\large Phase 2: Deep Architecture, Ablation Studies and a Handcrafted--Learned Hybrid}
+
+\author{\IEEEauthorblockN{Manas Selukar (2401010259), Anant Singh (2401010067), Akhil Sharma (2401020084),\\
+Tanish Rao (2401010474), Rohan Kumar (2401020103), Puneet Takhar (2401010358)}
+\IEEEauthorblockA{CSAI student project, Project 11: Automatic Clothing Category Recognition}}
+
+\maketitle
+
+\begin{abstract}
+Phase 1 of this project compared eight classical models with a three-layer convolutional network (CNN) on
+Fashion-MNIST; the CNN reached \PhaseOneCnnAcc{} test accuracy from a single training run and confused the
+upper-body classes. Phase 2 studies the deep model itself. We design a residual network family with batch
+normalisation and global average pooling, train \NConfigs{} configurations with three seeds each, and select the
+final model on validation data only. It reaches \TestFinal{} $\pm$ \TestFinalStd{} test accuracy against
+\TestPone{} $\pm$ \TestPoneStd{} for the re-trained Phase 1 CNN, raises Shirt recall from \TestPoneShirt{} to
+\TestFinalShirt{} and makes \ErrorReduction\% fewer errors. Thirteen one-factor ablations show that width, batch
+normalisation, augmentation and the learning-rate schedule matter most, and that the stronger training recipe does
+not help the Phase 1 architecture. A hybrid that fuses the CNN embedding with HOG features in an RBF-SVM scores
+\TestHtwo{} $\pm$ \TestHtwoStd; the gain of \HtwoGain{} percentage points is not statistically significant.
+Label smoothing makes the final model under-confident, and the accuracy gain comes with lower robustness to noise.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Fashion-MNIST, convolutional neural network, residual network, ablation study, data augmentation, HOG, hybrid model,
+calibration, robustness
+\end{IEEEkeywords}
+
+\input{phase2_sections/introduction}
+\input{phase2_sections/related_work}
+\input{phase2_sections/data_augmentation}
+\input{phase2_sections/architecture}
+\input{phase2_sections/ablation_design}
+\input{phase2_sections/hybrid}
+\input{phase2_sections/protocol}
+\input{phase2_sections/results}
+\input{phase2_sections/discussion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

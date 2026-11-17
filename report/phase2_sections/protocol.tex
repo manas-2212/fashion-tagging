@@ -1,0 +1,30 @@
+% Section owner: Puneet (protocol) and Rohan (evaluation metrics)
+\section{Protocol and Evaluation}
+\label{sec:p2protocol}
+\textbf{Selection.} All choices use validation data only. The final deep model is the configuration with the
+highest mean validation macro-F1 over the three seeds (ties: accuracy, then fewer parameters); this rule is
+implemented in code and was fixed before the runs.
+
+\textbf{Freeze and test gate.} After selection and hybrid tuning, one file records the selected configuration,
+the hybrid hyper-parameters, $\tau$, both recipes, the split hash and the list of \NGateModels{} models allowed on
+the test set: for each seed the re-trained Phase 1 CNN, the final deep model, H1, H2 and H3, and H0. The test
+set is loaded inside the gate, which refuses to run without the freeze file, with an existing flag file, or when
+the evaluated models differ from the frozen list. The gate ran once on all 10{,}000 test images.
+
+\textbf{Test-set reuse.} The same test images were evaluated once at the Phase 1 gate, and the Phase 1 error
+analysis motivated Phase 2. Phase 2 test numbers are therefore slightly optimistic as estimates for new data.
+Comparisons between Phase 2 models remain fair because all of them were selected on validation only.
+
+\textbf{Two kinds of uncertainty.} Training randomness is reported as mean $\pm$ sample standard deviation over
+three seeds. Test-set sampling is reported as a 95\% bootstrap interval (1{,}000 resamples) for seed 42. Pairs of
+models are compared with McNemar's test on seed 42, Bonferroni-corrected for \NComparisons{} planned comparisons.
+With three seeds the standard deviation is itself uncertain, so we use it descriptively.
+
+\textbf{Further measurements.} Per-class recall; in-group confusion, the share of T-shirt, Pullover, Coat and
+Shirt images assigned to another class of that group; the expected calibration error with 15 confidence
+bins~\cite{guo2017calibration}; accuracy under five corruptions on a stratified subset of 2{,}000 test images; and
+parameter counts and inference time.
+
+\textbf{Compute.} All \NRuns{} runs were trained on one Tesla T4 GPU in \TrainMinutesTotal{} minutes of training
+time in total (about \TrainSecondsDeeper{}~s per run for the final architecture and \TrainSecondsPone{}~s for the
+Phase 1 CNN). Runs are stored individually and can be resumed.
