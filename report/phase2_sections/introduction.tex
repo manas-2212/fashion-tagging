@@ -1,0 +1,28 @@
+% Section owner: Manas (integration)
+\section{Introduction}
+\label{sec:p2intro}
+The project asks whether a CNN separates visually similar clothing categories better than fixed image
+descriptors. Phase 1 answered this for one small CNN: three convolution layers followed by two dense layers reached
+\PhaseOneCnnAcc{} accuracy on the Fashion-MNIST test set~\cite{xiao2017fashion}, against \PhaseOneSvmAcc{} for the
+best classical model, an RBF-SVM on pixels. That result had stated limits. The CNN was trained once, with one
+seed, without augmentation or tuning, and its recall on the Shirt class was only \PhaseOneShirt.
+
+Phase 2 keeps the data split and the evaluation protocol of Phase 1 and asks four questions.
+\begin{enumerate}
+\item \emph{Architecture.} Does a deeper network with batch normalisation, residual blocks and global average
+pooling separate the confusable classes better, and is the gain due to the architecture or to the training recipe?
+\item \emph{Regularisation and data.} Which of augmentation, dropout, weight decay, label smoothing and the
+learning-rate schedule contribute to validation performance?
+\item \emph{Hybrid.} Do handcrafted HOG features add information to the learned CNN embedding when both are given
+to a classical classifier?
+\item \emph{Validation.} Are the differences larger than the variation between training runs and the sampling
+noise of the test set, and what do they cost in calibration, robustness and inference time?
+\end{enumerate}
+
+The contributions are: a configurable network family in which each architectural claim is tested by switching one
+option (Section~\ref{sec:p2arch}); \NRuns{} training runs covering a four-step architecture roadmap and thirteen
+one-factor ablations with three seeds each (Sections~\ref{sec:p2abl} and~\ref{sec:p2results}); a feature-level
+hybrid with two controls and a confidence-gated cascade (Section~\ref{sec:p2hybrid}); and a validation protocol
+with a freeze file, a one-shot test gate, multi-seed statistics, paired significance tests, calibration and a
+corruption stress test (Section~\ref{sec:p2protocol}). Results that did not go in the expected direction are
+reported as they were measured.

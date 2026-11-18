@@ -1,0 +1,44 @@
+% Section owner: Manas (architecture and training engine)
+\section{Architecture and Training}
+\label{sec:p2arch}
+\subsection{Limits of the Phase 1 CNN}
+The Phase 1 CNN applies three blocks of one $3\times3$ convolution, ReLU and max-pooling, flattens the
+$128\times3\times3$ output and classifies with two dense layers. Three properties limit it
+(Table~\ref{tab:p2arch}). First, \DenseSharePone\% of its \ParamsPone{} parameters sit in dense layers, which do
+not share weights across positions. Second, each resolution receives a single non-linear step, although the
+confusable classes differ in small local patterns such as collars, plackets and sleeve length. Third, a unit of its
+last feature map sees only $\RFPone\times\RFPone$ of the $28\times28$ pixels.
+
+\subsection{FashionNet}
+The Phase 2 family consists of a stem (one $3\times3$ convolution with 32 channels, batch normalisation, ReLU),
+three stages of widths 32, 64 and 128 at resolutions 28, 14 and 7 separated by $2\times2$ max-pooling, global
+average pooling, dropout and one linear layer. A stage contains $b$ blocks; a block computes
+\begin{align}
+F(x) &= \mathrm{BN}\bigl(\mathrm{conv}(\mathrm{ReLU}(\mathrm{BN}(\mathrm{conv}(x))))\bigr), \nonumber\\
+y &= \mathrm{ReLU}\bigl(F(x) + s(x)\bigr),
+\label{eq:p2block}
+\end{align}
+where $s$ is the identity, or a $1\times1$ convolution with batch normalisation when the number of channels
+changes~\cite{he2016deep}. Since $\partial y/\partial x$ contains the identity term from $s$, the gradient reaches
+early layers without passing through every convolution. Two stacked $3\times3$ convolutions cover a $5\times5$
+region with 18 instead of 25 weights per channel pair~\cite{simonyan2015very}. Global average
+pooling~\cite{lin2014network} replaces the $1152\rightarrow128$ dense layer; its 128 outputs are the embedding used
+by the hybrid models. No pooling follows the last stage, because $7\times7$ cannot be halved without discarding a
+row and a column.
+
+Three switches turn the family into an experiment: \emph{residual} (remove $s$), \emph{batch normalisation}
+(replace it by the identity and give the convolutions a bias), and the number of blocks per stage. The base model
+uses $b=1$ (7 convolution layers, \ParamsBase{} parameters, receptive field \RFBase{} pixels); the deeper variant
+uses $b=2$ (13 layers, \ParamsDeeper{} parameters).
+
+\input{phase2_tables/rt_architectures}
+
+\subsection{Training recipe}
+The Phase 1 recipe is Adam with a constant learning rate of $10^{-3}$, no augmentation and early stopping with
+patience 5. The Phase 2 recipe, fixed before any run, is AdamW~\cite{loshchilov2019decoupled} with learning rate
+$2\times10^{-3}$ and weight decay $10^{-2}$ (not applied to biases and batch-normalisation parameters), one epoch
+of linear warm-up followed by cosine decay to zero over 30 epochs~\cite{loshchilov2017sgdr}, batch size 128, label
+smoothing 0.1, dropout 0.3 before the classifier, and the augmentation of Section~\ref{sec:p2data}. Early stopping
+monitors the validation cross-entropy without label smoothing (patience 8) and the best weights are restored. On
+the GPU the forward pass uses mixed precision. The seed fixes the initial weights, the batch order and the
+augmentation draws.
