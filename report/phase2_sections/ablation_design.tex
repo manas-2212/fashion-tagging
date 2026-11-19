@@ -1,0 +1,29 @@
+% Section owner: Tanish (ablation design and regularisation theory)
+\section{Ablation Design}
+\label{sec:p2abl}
+\subsection{Roadmap}
+A comparison of the Phase 1 CNN with the new network would mix two changes, the architecture and the recipe. The
+roadmap separates them in four steps: (1)~Phase 1 CNN with the Phase 1 recipe; (2)~Phase 1 CNN with the Phase 2
+recipe; (3)~FashionNet without shortcuts; (4)~FashionNet with shortcuts, the base model.
+
+\subsection{One-factor ablations}
+Thirteen configurations change exactly one factor of the base (Table~\ref{tab:p2abl}); a unit test rejects a
+configuration that differs from the base in more than its declared factor. Two couplings are declared: SGD uses its
+own learning rate (0.05) and weight decay ($5\times10^{-4}$), and the constant schedule has no warm-up. Every
+configuration is trained with seeds 42, 43 and 44. We report the paired difference in validation macro-F1 per
+seed, variant minus base, because runs with the same seed share initial weights and batch order. A one-factor
+design does not measure interactions between factors.
+
+\subsection{What each regulariser is expected to do}
+Regularisation trades a small increase in bias for a decrease in variance. We measure variance directly as the
+generalisation gap, the training accuracy in evaluation mode minus the validation accuracy.
+
+\emph{Dropout} sets each pooled feature to zero with probability $p$ during training, so the classifier cannot
+depend on a single feature~\cite{srivastava2014dropout}. \emph{Decoupled weight decay} multiplies the weights by
+$(1-\eta\lambda)$ at each step; because batch normalisation removes the scale of the preceding weights, its main
+effect in a normalised network is to keep the effective learning rate from shrinking. \emph{Label smoothing} with
+$\varepsilon=0.1$ sets the target of the true class to $1-\varepsilon+\varepsilon/K=0.91$ and of the other classes
+to $\varepsilon/K=0.01$; cross-entropy with one-hot targets is minimised only by unbounded logits, and smoothing
+bounds the optimal logit gap. \emph{Augmentation} adds invariances instead of restricting weights.
+\emph{Cosine decay} reduces the gradient noise near the end of training, which a constant learning rate keeps at
+a fixed level.
