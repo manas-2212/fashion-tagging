@@ -1,0 +1,36 @@
+% Section owner: Anant (hybrid ML + DL)
+\section{Hybrid Models}
+\label{sec:p2hybrid}
+\subsection{Motivation}
+Phase 1 treated handcrafted features and the CNN as rivals. The two descriptions are built differently: HOG is a
+fixed function of local gradient orientation, the CNN embedding is learned from the labels. If the models fail on
+different images, a combination can in principle beat both. The hybrid tests whether a classical classifier can use
+this.
+
+\subsection{Models}
+All classical heads are RBF-SVMs, the best classical model of Phase 1.
+\begin{itemize}
+\item \textbf{H0}: PCA-reduced HOG $\rightarrow$ SVM. Control with handcrafted features only.
+\item \textbf{H1}: CNN embedding $\rightarrow$ SVM. Control with learned features and a classical classifier.
+\item \textbf{H2}: [embedding, $\alpha\,\cdot$ PCA-HOG] $\rightarrow$ SVM. Feature-level fusion.
+\item \textbf{H3}: the CNN decides when its largest softmax probability is at least $\tau$; otherwise H2 decides.
+\end{itemize}
+The controls make the claim falsifiable. If H2 exceeds the CNN but equals H1, the gain comes from the SVM head and
+not from HOG; only H2 above H1 supports complementary information.
+
+\subsection{Fusion vector}
+The 128 embedding dimensions are standardised. The 6{,}084 HOG dimensions are reduced by PCA with whitening, so that
+both blocks have unit variance per dimension. For two images $a$ and $b$ the RBF kernel then depends on
+\begin{equation}
+\|z_a-z_b\|^2=\|e_a-e_b\|^2+\alpha^2\|h_a-h_b\|^2,
+\end{equation}
+so $\alpha$ sets the weight of the handcrafted block. $C\in\{1,10\}$, the number of HOG components
+$\in\{64,128\}$ and $\alpha\in\{0.5,1,2\}$ are chosen on validation with an SVM fitted on a stratified
+10{,}000-image training subset, as in Phase 1; the final SVM is fitted on all 54{,}000 training images.
+Hyper-parameters and $\tau$ are chosen with seed 42 and re-used for the other seeds. The scaler, the PCA (fitted on
+a 20{,}000-image training subset) and the SVM never see validation or test images.
+
+\subsection{Limitation}
+The CNN was trained on the same images whose embeddings train the SVM, so training embeddings are cleaner than
+embeddings of new images. Out-of-fold embeddings would remove this at several times the training cost; we keep the
+simple version and judge it on validation and test.
