@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\centering
+\caption{One-factor ablations: paired change in validation macro-F1 relative to the base (variant minus base, same seed).}
+\label{tab:p2_ablation_deltas}
+\footnotesize
+\begin{tabular}{lrrrrr}
+\toprule
+group & change & delta F1 (mean) & min & max & all seeds agree \\
+\midrule
+architecture & blocks\_per\_stage=2 (13 conv layers instead of 7) & 0.0034 & 0.0024 & 0.0045 & yes \\
+architecture & widths=(16, 32, 64) (about 4x fewer weights) & -0.0110 & -0.0119 & -0.0097 & yes \\
+architecture & use\_bn=False & -0.0070 & -0.0127 & -0.0030 & yes \\
+architecture & residual=False & -0.0013 & -0.0026 & 0.0015 & no \\
+augmentation & aug='crop\_flip' & -0.0016 & -0.0024 & -0.0009 & yes \\
+augmentation & aug='crop\_erase' & 0.0000 & -0.0003 & 0.0003 & no \\
+augmentation & aug='none' & -0.0072 & -0.0104 & -0.0028 & yes \\
+optimisation & schedule='constant', warmup\_epochs=0 & -0.0068 & -0.0094 & -0.0046 & yes \\
+optimisation & SGD + Nesterov momentum 0.9, lr=0.05, wd=0.0005 & -0.0009 & -0.0025 & 0.0005 & no \\
+regularisation & dropout=0.5 & -0.0018 & -0.0029 & -0.0003 & yes \\
+regularisation & dropout=0.0 & 0.0002 & -0.0020 & 0.0026 & no \\
+regularisation & label\_smoothing=0.0 & -0.0029 & -0.0046 & -0.0017 & yes \\
+regularisation & weight\_decay=0.0 & -0.0010 & -0.0028 & 0.0003 & no \\
+\bottomrule
+\end{tabular}
+\end{table*}

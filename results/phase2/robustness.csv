@@ -1,0 +1,81 @@
+model,corruption,level,accuracy,drop_vs_clean
+Phase 1 CNN (re-trained),gaussian_noise,0.0,0.9295,0.0
+Final deep model,gaussian_noise,0.0,0.9505,0.0
+H2 fusion,gaussian_noise,0.0,0.9505,0.0
+H0 HOG + SVM,gaussian_noise,0.0,0.905,0.0
+Phase 1 CNN (re-trained),gaussian_noise,0.05,0.899,0.03049999999999997
+Final deep model,gaussian_noise,0.05,0.8125,0.138
+H2 fusion,gaussian_noise,0.05,0.7975,0.15300000000000002
+H0 HOG + SVM,gaussian_noise,0.05,0.659,0.246
+Phase 1 CNN (re-trained),gaussian_noise,0.1,0.855,0.07450000000000001
+Final deep model,gaussian_noise,0.1,0.381,0.5695
+H2 fusion,gaussian_noise,0.1,0.3765,0.5740000000000001
+H0 HOG + SVM,gaussian_noise,0.1,0.5375,0.36750000000000005
+Phase 1 CNN (re-trained),gaussian_noise,0.2,0.5465,0.383
+Final deep model,gaussian_noise,0.2,0.1665,0.784
+H2 fusion,gaussian_noise,0.2,0.172,0.7785
+H0 HOG + SVM,gaussian_noise,0.2,0.329,0.5760000000000001
+Phase 1 CNN (re-trained),brightness,0.0,0.9295,0.0
+Final deep model,brightness,0.0,0.9505,0.0
+H2 fusion,brightness,0.0,0.9505,0.0
+H0 HOG + SVM,brightness,0.0,0.905,0.0
+Phase 1 CNN (re-trained),brightness,0.1,0.8315,0.09799999999999998
+Final deep model,brightness,0.1,0.786,0.16449999999999998
+H2 fusion,brightness,0.1,0.8305,0.12
+H0 HOG + SVM,brightness,0.1,0.8985,0.006500000000000061
+Phase 1 CNN (re-trained),brightness,0.2,0.5745,0.355
+Final deep model,brightness,0.2,0.6565,0.29400000000000004
+H2 fusion,brightness,0.2,0.713,0.23750000000000004
+H0 HOG + SVM,brightness,0.2,0.893,0.01200000000000001
+Phase 1 CNN (re-trained),brightness,0.3,0.4585,0.471
+Final deep model,brightness,0.3,0.553,0.39749999999999996
+H2 fusion,brightness,0.3,0.601,0.34950000000000003
+H0 HOG + SVM,brightness,0.3,0.89,0.015000000000000013
+Phase 1 CNN (re-trained),contrast,0.0,0.9295,0.0
+Final deep model,contrast,0.0,0.9505,0.0
+H2 fusion,contrast,0.0,0.9505,0.0
+H0 HOG + SVM,contrast,0.0,0.905,0.0
+Phase 1 CNN (re-trained),contrast,0.25,0.9165,0.013000000000000012
+Final deep model,contrast,0.25,0.9415,0.009000000000000008
+H2 fusion,contrast,0.25,0.938,0.012500000000000067
+H0 HOG + SVM,contrast,0.25,0.9055,-0.0004999999999999449
+Phase 1 CNN (re-trained),contrast,0.5,0.879,0.05049999999999999
+Final deep model,contrast,0.5,0.908,0.04249999999999998
+H2 fusion,contrast,0.5,0.9065,0.04400000000000004
+H0 HOG + SVM,contrast,0.5,0.907,-0.0020000000000000018
+Phase 1 CNN (re-trained),contrast,0.75,0.793,0.13649999999999995
+Final deep model,contrast,0.75,0.8675,0.08299999999999996
+H2 fusion,contrast,0.75,0.8685,0.08199999999999996
+H0 HOG + SVM,contrast,0.75,0.899,0.006000000000000005
+Phase 1 CNN (re-trained),shift,0.0,0.9295,0.0
+Final deep model,shift,0.0,0.9505,0.0
+H2 fusion,shift,0.0,0.9505,0.0
+H0 HOG + SVM,shift,0.0,0.905,0.0
+Phase 1 CNN (re-trained),shift,1.0,0.8735,0.05599999999999994
+Final deep model,shift,1.0,0.944,0.006500000000000061
+H2 fusion,shift,1.0,0.9455,0.0050000000000000044
+H0 HOG + SVM,shift,1.0,0.835,0.07000000000000006
+Phase 1 CNN (re-trained),shift,2.0,0.7865,0.14300000000000002
+Final deep model,shift,2.0,0.943,0.007500000000000062
+H2 fusion,shift,2.0,0.946,0.0045000000000000595
+H0 HOG + SVM,shift,2.0,0.655,0.25
+Phase 1 CNN (re-trained),shift,3.0,0.6645,0.265
+Final deep model,shift,3.0,0.942,0.008500000000000063
+H2 fusion,shift,3.0,0.9395,0.01100000000000001
+H0 HOG + SVM,shift,3.0,0.416,0.48900000000000005
+Phase 1 CNN (re-trained),occlusion,0.0,0.9295,0.0
+Final deep model,occlusion,0.0,0.9505,0.0
+H2 fusion,occlusion,0.0,0.9505,0.0
+H0 HOG + SVM,occlusion,0.0,0.905,0.0
+Phase 1 CNN (re-trained),occlusion,5.0,0.9175,0.01200000000000001
+Final deep model,occlusion,5.0,0.9485,0.0020000000000000018
+H2 fusion,occlusion,5.0,0.95,0.000500000000000056
+H0 HOG + SVM,occlusion,5.0,0.896,0.009000000000000008
+Phase 1 CNN (re-trained),occlusion,8.0,0.894,0.035499999999999976
+Final deep model,occlusion,8.0,0.935,0.015499999999999958
+H2 fusion,occlusion,8.0,0.935,0.015499999999999958
+H0 HOG + SVM,occlusion,8.0,0.8715,0.033499999999999974
+Phase 1 CNN (re-trained),occlusion,11.0,0.836,0.09350000000000003
+Final deep model,occlusion,11.0,0.916,0.034499999999999975
+H2 fusion,occlusion,11.0,0.9145,0.03600000000000003
+H0 HOG + SVM,occlusion,11.0,0.794,0.11099999999999999

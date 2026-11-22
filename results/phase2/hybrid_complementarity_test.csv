@@ -1,0 +1,4 @@
+split,seed,model_a,model_b,n,both_correct,only_a_correct,only_b_correct,both_wrong,accuracy_a,accuracy_b,oracle_accuracy,share_of_a_errors_fixed_by_b
+test,42,final_dl,h0_hog_svm,10000,8867,623,181,329,0.949,0.9048,0.9671,0.35490196078431374
+test,42,final_dl,h2_fusion_svm,10000,9465,25,36,474,0.949,0.9501,0.9526,0.07058823529411765
+test,42,h1_emb_svm,h2_fusion_svm,10000,9468,31,33,468,0.9499,0.9501,0.9532,0.0658682634730539

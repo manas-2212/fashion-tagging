@@ -1,0 +1,11 @@
+true_class,pred_class,count,rate_of_true_class
+Shirt,T-shirt/top,78,0.078
+T-shirt/top,Shirt,67,0.067
+Shirt,Coat,43,0.043
+Shirt,Pullover,36,0.036
+Pullover,Shirt,26,0.026
+Ankle boot,Sneaker,25,0.025
+Coat,Shirt,23,0.023
+Pullover,Coat,21,0.021
+Dress,Shirt,19,0.019
+Coat,Pullover,18,0.018

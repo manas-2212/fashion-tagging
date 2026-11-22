@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\centering
+\caption{McNemar tests on the test set (seed 42), Bonferroni-corrected for 7 comparisons.}
+\label{tab:p2_mcnemar}
+\footnotesize
+\begin{tabular}{lrrrrr}
+\toprule
+model\_a & model\_b & a\_right\_b\_wrong & a\_wrong\_b\_right & p\_bonferroni & significant\_0.05 \\
+\midrule
+final\_dl & p1\_cnn (re-trained) & 367 & 158 & 7.751e-19 & yes \\
+h1\_emb\_svm & final\_dl & 27 & 18 & 1 & no \\
+h2\_fusion\_svm & final\_dl & 36 & 25 & 1 & no \\
+h3\_cascade & final\_dl & 36 & 25 & 1 & no \\
+h2\_fusion\_svm & h1\_emb\_svm & 33 & 31 & 1 & no \\
+final\_dl & Phase 1 CNN (original checkpoint) & 377 & 161 & 1.312e-19 & yes \\
+final\_dl & Phase 1 RBF-SVM on pixels & 718 & 181 & 1.256e-70 & yes \\
+\bottomrule
+\end{tabular}
+\end{table*}

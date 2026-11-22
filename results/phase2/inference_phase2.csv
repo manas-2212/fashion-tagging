@@ -1,0 +1,4 @@
+model,params,cpu_ms_per_image,gpu_ms_per_image,includes_preprocessing,n_images
+Phase 1 CNN,241546,0.5004793614998562,0.010738090500126418,False,2000
+Final deep model,696042,2.492647214500721,0.07669416750013625,False,2000
+H2 fusion (end-to-end),696042,5.5625657519995,,True,500

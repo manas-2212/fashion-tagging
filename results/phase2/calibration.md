@@ -1,0 +1,11 @@
+| model | split | seed | ece | mean_confidence | accuracy |
+| --- | --- | --- | --- | --- | --- |
+| p1_cnn | test | 42 | 0.0143 | 0.9380 | 0.9281 |
+| p1_cnn | test | 43 | 0.0175 | 0.9387 | 0.9215 |
+| p1_cnn | test | 44 | 0.0070 | 0.9286 | 0.9260 |
+| final_dl | test | 42 | 0.0644 | 0.8862 | 0.9490 |
+| final_dl | test | 43 | 0.0681 | 0.8855 | 0.9472 |
+| final_dl | test | 44 | 0.0674 | 0.8858 | 0.9501 |
+| base | validation | 42 | 0.0828 | 0.8704 | 0.9532 |
+| reg_no_ls | validation | 42 | 0.0101 | 0.9609 | 0.9513 |
+| p1_cnn_p1_recipe | validation | 42 | 0.0083 | 0.9410 | 0.9368 |

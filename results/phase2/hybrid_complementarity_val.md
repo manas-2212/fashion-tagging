@@ -1,0 +1,11 @@
+| split | seed | model_a | model_b | n | both_correct | only_a_correct | only_b_correct | both_wrong | accuracy_a | accuracy_b | oracle_accuracy | share_of_a_errors_fixed_by_b |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| validation | 42 | final_dl | h0_hog_svm | 6,000 | 5,402 | 337 | 95 | 166 | 0.9565 | 0.9162 | 0.9723 | 0.3640 |
+| validation | 42 | final_dl | h2_fusion_svm | 6,000 | 5,716 | 23 | 25 | 236 | 0.9565 | 0.9568 | 0.9607 | 0.0958 |
+| validation | 42 | h1_emb_svm | h2_fusion_svm | 6,000 | 5,716 | 24 | 25 | 235 | 0.9567 | 0.9568 | 0.9608 | 0.0962 |
+| validation | 43 | final_dl | h0_hog_svm | 6,000 | 5,399 | 337 | 98 | 166 | 0.9560 | 0.9162 | 0.9723 | 0.3712 |
+| validation | 43 | final_dl | h2_fusion_svm | 6,000 | 5,719 | 17 | 32 | 232 | 0.9560 | 0.9585 | 0.9613 | 0.1212 |
+| validation | 43 | h1_emb_svm | h2_fusion_svm | 6,000 | 5,722 | 16 | 29 | 233 | 0.9563 | 0.9585 | 0.9612 | 0.1107 |
+| validation | 44 | final_dl | h0_hog_svm | 6,000 | 5,393 | 335 | 104 | 168 | 0.9547 | 0.9162 | 0.9720 | 0.3824 |
+| validation | 44 | final_dl | h2_fusion_svm | 6,000 | 5,713 | 15 | 35 | 237 | 0.9547 | 0.9580 | 0.9605 | 0.1287 |
+| validation | 44 | h1_emb_svm | h2_fusion_svm | 6,000 | 5,717 | 15 | 31 | 237 | 0.9553 | 0.9580 | 0.9605 | 0.1157 |

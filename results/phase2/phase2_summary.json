@@ -1,0 +1,120 @@
+{
+  "final_config": "arch_deeper",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "n_test": 10000,
+  "smoke": false,
+  "test": {
+    "h0_hog_svm": {
+      "accuracy_mean": 0.9048,
+      "accuracy_std": 0.0,
+      "macro_f1_mean": 0.9046574247475192,
+      "macro_f1_std": 0.0,
+      "ci95_low": 0.899,
+      "ci95_high": 0.9102025
+    },
+    "p1_cnn": {
+      "accuracy_mean": 0.9252000000000001,
+      "accuracy_std": 0.0033719430600175015,
+      "macro_f1_mean": 0.9250215398193106,
+      "macro_f1_std": 0.0030198463275446195,
+      "ci95_low": 0.9231,
+      "ci95_high": 0.9332
+    },
+    "final_dl": {
+      "accuracy_mean": 0.9487666666666666,
+      "accuracy_std": 0.0014640127503997987,
+      "macro_f1_mean": 0.9486626950195683,
+      "macro_f1_std": 0.0013802332819768354,
+      "ci95_low": 0.9444975,
+      "ci95_high": 0.9532025000000001
+    },
+    "h1_emb_svm": {
+      "accuracy_mean": 0.9495333333333335,
+      "accuracy_std": 0.0009073771725877506,
+      "macro_f1_mean": 0.9494039068258074,
+      "macro_f1_std": 0.0009481134901663512,
+      "ci95_low": 0.9453975,
+      "ci95_high": 0.954
+    },
+    "h2_fusion_svm": {
+      "accuracy_mean": 0.9502333333333334,
+      "accuracy_std": 0.002003330560175567,
+      "macro_f1_mean": 0.9501400735066365,
+      "macro_f1_std": 0.002026678364437043,
+      "ci95_low": 0.9454975,
+      "ci95_high": 0.9539025
+    },
+    "h3_cascade": {
+      "accuracy_mean": 0.9502,
+      "accuracy_std": 0.002051828452868318,
+      "macro_f1_mean": 0.9501068123353799,
+      "macro_f1_std": 0.002075649949587847,
+      "ci95_low": 0.9454975,
+      "ci95_high": 0.9539025
+    }
+  },
+  "hybrid": {
+    "final_config": "arch_deeper",
+    "h0": {
+      "C": 10.0,
+      "alpha": 1.0,
+      "hog_dim": 128,
+      "mode": "hog"
+    },
+    "h1": {
+      "C": 1.0,
+      "alpha": 1.0,
+      "hog_dim": 0,
+      "mode": "emb"
+    },
+    "h2": {
+      "C": 1.0,
+      "alpha": 2.0,
+      "hog_dim": 128,
+      "mode": "fusion"
+    },
+    "pca_components": 128,
+    "pca_explained_variance": 0.48309072852134705,
+    "primary_seed": 42,
+    "tau": 0.7,
+    "tune_n": 10000
+  },
+  "freeze_sha256_models": [
+    "p1_cnn@42",
+    "final_dl@42",
+    "h1_emb_svm@42",
+    "h2_fusion_svm@42",
+    "h3_cascade@42",
+    "p1_cnn@43",
+    "final_dl@43",
+    "h1_emb_svm@43",
+    "h2_fusion_svm@43",
+    "h3_cascade@43",
+    "p1_cnn@44",
+    "final_dl@44",
+    "h1_emb_svm@44",
+    "h2_fusion_svm@44",
+    "h3_cascade@44",
+    "h0_hog_svm"
+  ],
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "cpu": "x86_64 (2 logical cores)",
+    "ram": "12.7 GB",
+    "numpy": "2.4.6",
+    "pandas": "2.2.3",
+    "sklearn": "1.6.1",
+    "skimage": "0.25.2",
+    "torch": "2.14.1+cu130",
+    "torchvision": "0.29.1+cu130",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "torch_threads": 1,
+    "seed": 42
+  }
+}

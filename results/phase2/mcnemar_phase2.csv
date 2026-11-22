@@ -1,0 +1,8 @@
+model_a,model_b,accuracy_a,accuracy_b,a_right_b_wrong,a_wrong_b_right,p_value,p_bonferroni,method,significant_0.05
+final_dl,p1_cnn (re-trained),0.949,0.9281,367,158,1.1072616231165393e-19,7.750831361815775e-19,chi-square with continuity correction,True
+h1_emb_svm,final_dl,0.9499,0.949,27,18,0.23303798227390204,1.0,chi-square with continuity correction,False
+h2_fusion_svm,final_dl,0.9501,0.949,36,25,0.2004154616928513,1.0,chi-square with continuity correction,False
+h3_cascade,final_dl,0.9501,0.949,36,25,0.2004154616928513,1.0,chi-square with continuity correction,False
+h2_fusion_svm,h1_emb_svm,0.9501,0.9499,33,31,0.9005235503397742,1.0,chi-square with continuity correction,False
+final_dl,Phase 1 CNN (original checkpoint),0.949,0.9274,377,161,1.8735715535123038e-20,1.3115000874586127e-19,chi-square with continuity correction,True
+final_dl,Phase 1 RBF-SVM on pixels,0.949,0.8953,718,181,1.7944941523670802e-71,1.2561459066569562e-70,chi-square with continuity correction,True
