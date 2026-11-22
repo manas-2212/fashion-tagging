@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\caption{Model size and inference time per image (median of repeated passes; the hybrid row is end-to-end from raw images on the device used for the run, including HOG extraction).}
+\label{tab:p2_inference}
+\footnotesize
+\begin{tabular}{lrrrrr}
+\toprule
+model & params & cpu\_ms\_per\_image & gpu\_ms\_per\_image & includes\_preprocessing & n\_images \\
+\midrule
+Phase 1 CNN & 241,546 & 0.5005 & 0.0107 & no & 2,000 \\
+Final deep model & 696,042 & 2.4926 & 0.0767 & no & 2,000 \\
+H2 fusion (end-to-end) & 696,042 & 5.5626 & -- & yes & 500 \\
+\bottomrule
+\end{tabular}
+\end{table}

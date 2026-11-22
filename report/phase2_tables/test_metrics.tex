@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\caption{Test results of the frozen Phase 2 models (mean +- std over 3 training seeds; the interval is a bootstrap over test images for one seed).}
+\label{tab:p2_test}
+\footnotesize
+\begin{tabular}{lrrrrr}
+\toprule
+model & test accuracy & test macro-F1 & 95\% CI (seed 42) & Shirt recall & in-group confusion \\
+\midrule
+H0: PCA-HOG + SVM & 0.9048 $\pm$ 0.0000 & 0.9047 $\pm$ 0.0000 & [0.8990, 0.9102] & 0.7080 & 0.1532 \\
+Phase 1 CNN (re-trained) & 0.9252 $\pm$ 0.0034 & 0.9250 $\pm$ 0.0030 & [0.9231, 0.9332] & 0.7570 & 0.1225 \\
+Final deep model & 0.9488 $\pm$ 0.0015 & 0.9487 $\pm$ 0.0014 & [0.9445, 0.9532] & 0.8343 & 0.0847 \\
+H1: CNN embedding + SVM & 0.9495 $\pm$ 0.0009 & 0.9494 $\pm$ 0.0009 & [0.9454, 0.9540] & 0.8327 & 0.0838 \\
+H2: embedding + HOG fusion SVM & 0.9502 $\pm$ 0.0020 & 0.9501 $\pm$ 0.0020 & [0.9455, 0.9539] & 0.8387 & 0.0832 \\
+H3: confidence-gated cascade & 0.9502 $\pm$ 0.0021 & 0.9501 $\pm$ 0.0021 & [0.9455, 0.9539] & 0.8387 & 0.0832 \\
+\bottomrule
+\end{tabular}
+\end{table*}
