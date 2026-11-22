@@ -1,0 +1,26 @@
+{
+  "final_config": "arch_deeper",
+  "tune_n": 10000,
+  "pca_components": 128,
+  "pca_explained_variance": 0.48309072852134705,
+  "primary_seed": 42,
+  "h0": {
+    "mode": "hog",
+    "C": 10.0,
+    "hog_dim": 128,
+    "alpha": 1.0
+  },
+  "h1": {
+    "mode": "emb",
+    "C": 1.0,
+    "hog_dim": 0,
+    "alpha": 1.0
+  },
+  "h2": {
+    "mode": "fusion",
+    "C": 1.0,
+    "hog_dim": 128,
+    "alpha": 2.0
+  },
+  "tau": 0.7
+}

@@ -1,0 +1,24 @@
+{
+  "created_utc": "2026-11-16T05:06:58+00:00",
+  "freeze_sha256": "a6eb05ea62db7007436bd2c45b423959be524c7fa3ca6fc1a5c1ebdd9d3ab92d",
+  "n_test": 10000,
+  "full_test_set": true,
+  "models": [
+    "p1_cnn@42",
+    "final_dl@42",
+    "h1_emb_svm@42",
+    "h2_fusion_svm@42",
+    "h3_cascade@42",
+    "p1_cnn@43",
+    "final_dl@43",
+    "h1_emb_svm@43",
+    "h2_fusion_svm@43",
+    "h3_cascade@43",
+    "p1_cnn@44",
+    "final_dl@44",
+    "h1_emb_svm@44",
+    "h2_fusion_svm@44",
+    "h3_cascade@44",
+    "h0_hog_svm"
+  ]
+}

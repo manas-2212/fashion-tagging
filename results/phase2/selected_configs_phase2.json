@@ -1,0 +1,148 @@
+{
+  "created_utc": "2026-11-16T05:04:01+00:00",
+  "git_commit": "unavailable",
+  "selected": {
+    "base_arch": {
+      "blocks_per_stage": 1,
+      "dropout": 0.3,
+      "residual": true,
+      "use_bn": true,
+      "widths": [
+        32,
+        64,
+        128
+      ]
+    },
+    "configurations_trained": [
+      "p1_cnn_p1_recipe",
+      "p1_cnn_p2_recipe",
+      "arch_plain",
+      "base",
+      "arch_no_bn",
+      "arch_deeper",
+      "arch_narrow",
+      "reg_dropout0",
+      "reg_dropout05",
+      "reg_no_wd",
+      "reg_no_ls",
+      "aug_none",
+      "aug_no_flip",
+      "aug_no_erase",
+      "opt_sgd",
+      "opt_constant_lr"
+    ],
+    "final_config": "arch_deeper",
+    "final_config_dict": {
+      "arch": "fashionnet",
+      "arch_kwargs": {
+        "blocks_per_stage": 2,
+        "dropout": 0.3,
+        "residual": true,
+        "use_bn": true,
+        "widths": [
+          32,
+          64,
+          128
+        ]
+      },
+      "aug": "crop_flip_erase",
+      "batch_size": 128,
+      "label_smoothing": 0.1,
+      "lr": 0.002,
+      "max_epochs": 30,
+      "name": "arch_deeper",
+      "optimizer": "adamw",
+      "patience": 8,
+      "schedule": "cosine",
+      "warmup_epochs": 1,
+      "weight_decay": 0.01
+    },
+    "gate_models": [
+      "p1_cnn@42",
+      "final_dl@42",
+      "h1_emb_svm@42",
+      "h2_fusion_svm@42",
+      "h3_cascade@42",
+      "p1_cnn@43",
+      "final_dl@43",
+      "h1_emb_svm@43",
+      "h2_fusion_svm@43",
+      "h3_cascade@43",
+      "p1_cnn@44",
+      "final_dl@44",
+      "h1_emb_svm@44",
+      "h2_fusion_svm@44",
+      "h3_cascade@44",
+      "h0_hog_svm"
+    ],
+    "hybrid": {
+      "final_config": "arch_deeper",
+      "h0": {
+        "C": 10.0,
+        "alpha": 1.0,
+        "hog_dim": 128,
+        "mode": "hog"
+      },
+      "h1": {
+        "C": 1.0,
+        "alpha": 1.0,
+        "hog_dim": 0,
+        "mode": "emb"
+      },
+      "h2": {
+        "C": 1.0,
+        "alpha": 2.0,
+        "hog_dim": 128,
+        "mode": "fusion"
+      },
+      "pca_components": 128,
+      "pca_explained_variance": 0.48309072852134705,
+      "primary_seed": 42,
+      "tau": 0.7,
+      "tune_n": 10000
+    },
+    "n_train": 54000,
+    "n_val": 6000,
+    "p1_recipe": {
+      "aug": "none",
+      "batch_size": 128,
+      "label_smoothing": 0.0,
+      "lr": 0.001,
+      "max_epochs": 30,
+      "optimizer": "adam",
+      "patience": 5,
+      "schedule": "constant",
+      "warmup_epochs": 0,
+      "weight_decay": 0.0
+    },
+    "p2_recipe": {
+      "aug": "crop_flip_erase",
+      "batch_size": 128,
+      "label_smoothing": 0.1,
+      "lr": 0.002,
+      "max_epochs": 30,
+      "optimizer": "adamw",
+      "patience": 8,
+      "schedule": "cosine",
+      "warmup_epochs": 1,
+      "weight_decay": 0.01
+    },
+    "phase": 2,
+    "primary_seed": 42,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "selection_preview": {
+      "final_config": "arch_deeper",
+      "n_params": 696042,
+      "rule": "highest mean validation macro-F1 over seeds; ties: higher mean accuracy, then fewer parameters, then name; diverged or incomplete configurations excluded",
+      "val_accuracy_mean": 0.9557222222222223,
+      "val_macro_f1_mean": 0.9557416708628402,
+      "val_macro_f1_std": 0.000972425819206863
+    },
+    "smoke": false,
+    "split_hash": "c3422ec2263f27695df41da8c31d3e521f0605b52047b1262c1173f7d33dd1ea"
+  }
+}

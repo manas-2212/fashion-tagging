@@ -1,0 +1,8 @@
+{
+  "final_config": "arch_deeper",
+  "rule": "highest mean validation macro-F1 over seeds; ties: higher mean accuracy, then fewer parameters, then name; diverged or incomplete configurations excluded",
+  "val_macro_f1_mean": 0.9557416708628402,
+  "val_macro_f1_std": 0.000972425819206863,
+  "val_accuracy_mean": 0.9557222222222223,
+  "n_params": 696042
+}
